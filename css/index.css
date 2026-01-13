@@ -1,0 +1,162 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Sarabun:wght@400;600&display=swap');
+
+:root {
+    --primary: #575757;
+    --primary-light: #e8f5e9;
+    --secondary: #64748b;
+    --danger: #ef4444;
+    --green: #2E924C;
+    --blue: #1D4ED8;
+    --bg: #f8fafc;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --cell-height: 185px;
+}
+
+body {
+    font-family: 'Inter', 'Sarabun', sans-serif;
+    background-color: var(--bg);
+    color: #1e293b;
+    margin: 0;
+    padding: 40px 20px;
+}
+
+.container {
+    max-width: 80%;
+    margin: auto;
+    background: var(--card-bg);
+    padding: 40px;
+    border-radius: 24px;
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+}
+
+h2 { text-align: center; font-weight: 600; color: var(--primary); margin-bottom: 32px; }
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding: 10px;
+    background: #f1f5f9;
+    border-radius: 16px;
+}
+
+.slicer-group select {
+    padding: 8px 16px; border-radius: 10px; border: 1px solid var(--border);
+    font-weight: 500; cursor: pointer; outline: none;
+}
+
+.btn-nav {
+    background: white; color: var(--secondary); border: 1px solid var(--border);
+    width: 36px; height: 36px; border-radius: 10px; cursor: pointer;
+    transition: 0.2s;
+}
+.btn-nav:hover { background: var(--primary); color: white; }
+
+/* Calendar Grid */
+table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+
+th {
+    padding: 12px; color: var(--secondary); font-size: 0.8rem;
+    font-weight: 600; text-transform: uppercase;
+}
+
+td {
+    border: 1px solid var(--border);
+    height: var(--cell-height);
+    max-height: var(--cell-height);
+    vertical-align: top;
+    padding: 10px;
+    position: relative;
+    background: white;
+    overflow: hidden;
+    transition: background 0.1s;
+}
+td:hover { background: #fafafa; cursor: pointer; }
+td.today { background: #f4fdff; }
+td.today::after {
+    content: ''; position: absolute; inset: 0;
+    border: 1px solid #dadada; pointer-events: none;
+}
+
+.date-num { 
+    font-weight: 600; font-size: 1rem; color: #475569; 
+    margin-bottom: 8px; display: block;
+}
+
+.nickname-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.nickname-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.badge {
+    width: fit-content;
+    font-size: 0.72rem;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    box-sizing: border-box;
+    box-shadow: 5px 3px 8px #9c9c9c;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.badge.student {
+    background-color: #D4FFD8; 
+    color: var(--green);
+    border: 1px solid var(--green);
+}
+.badge.admin {
+    background-color: #D0E8FF; 
+    color: var(--blue);
+    border: 1px solid var(--blue);
+}
+.badge:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+td.is-full { background-color: #fef2f2; cursor: default; }
+.status-full {
+    position: absolute; top: 10px; right: 10px;
+    font-size: 0.6rem; font-weight: 700; color: white;
+    background: var(--danger); padding: 2px 6px; border-radius: 4px;
+}
+
+/* Modal */
+.modal {
+    display: none; position: fixed; inset: 0;
+    background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); z-index: 1000;
+}
+.modal-content {
+    background: white; padding: 32px; max-width: 380px;
+    margin: 80px auto; border-radius: 20px; animation: modalIn 0.3s ease-out;
+}
+@keyframes modalIn { from { opacity:0; transform:translateY(10px) } to { opacity:1; transform:translateY(0) } }
+
+label { display:block; margin-top:14px; font-weight:600; font-size:0.8rem; color:var(--secondary); }
+input {
+    width: 100%; padding: 10px 14px; margin-top: 4px;
+    border: 1px solid var(--border); border-radius:10px; box-sizing:border-box;
+}
+input:focus { border-color: var(--primary); outline:none; background:#fff; }
+input.readonly {
+    background-color: #e5e7eb; 
+    cursor: not-allowed;
+}
+
+.btn-group { margin-top:24px; display:flex; gap:8px; }
+.action-btn { flex:1; padding:10px; border:none; border-radius:10px; font-weight:600; cursor:pointer; font-size:0.9rem; }
+.btn-save { background:#D4FFD8; color:var(--green); }
+.btn-delete { background:#fee2e2; color:var(--danger); }
+.btn-close { background:#f1f5f9; color:var(--secondary); }

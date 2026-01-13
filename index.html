@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Queue Booking System</title>
+<link rel="stylesheet" href="css/index.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<div class="container">
+    <h2>ระบบจองคิวทำงาน</h2>
+
+    <div class="calendar-header">
+        <button class="btn-nav" onclick="changeMonth(-1)">‹</button>
+        <div class="slicer-group">
+            <select id="monthSlicer" onchange="jumpToDate()"></select>
+            <select id="yearSlicer" onchange="jumpToDate()"></select>
+        </div>
+        <button class="btn-nav" onclick="changeMonth(1)">›</button>
+    </div>
+
+    <table id="calendar"></table>
+</div>
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <h3 id="modalTitle" style="margin-top:0; color:var(--primary)">จองคิว</h3>
+        <p id="modalDateDisplay" style="color:var(--secondary); font-size:0.85rem;"></p>
+        <input type="hidden" id="booking_id">
+
+        <label>รหัสนักศึกษา</label>
+        <input type="text" id="student_id">
+
+        <label>ชื่อ–นามสกุล</label>
+        <input type="text" id="full_name">
+
+        <label>ชื่อเล่น</label>
+        <input type="text" id="nickname">
+
+        <div class="btn-group">
+            <button class="action-btn btn-save" onclick="saveBooking()">บันทึก</button>
+            <button id="delBtn" class="action-btn btn-delete" onclick="deleteBooking()">ยกเลิกคิว</button>
+            <button class="action-btn btn-close" onclick="closeModal()">ปิด</button>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
