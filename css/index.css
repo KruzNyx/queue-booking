@@ -11,6 +11,16 @@
     --card-bg: #ffffff;
     --border: #e2e8f0;
     --cell-height: 185px;
+
+
+    --student: #7c3aed;        /* ม่วง */
+    --student-bg: #f3e8ff;
+
+    --admin: #db2777;          /* ชมพู */
+    --admin-bg: #fde2f3;
+
+    --action: #9ca3af;         /* เทาอ่อน */
+    --action-bg: #f3f4f6;
 }
 
 body {
@@ -52,9 +62,11 @@ h2 { text-align: center; font-weight: 600; color: var(--primary); margin-bottom:
     width: 36px; height: 36px; border-radius: 10px; cursor: pointer;
     transition: 0.2s;
 }
+
 .btn-nav:hover { background: var(--primary); color: white; }
 
-/* Calendar Grid */
+
+/******Calendar Grid******/
 table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 
 th {
@@ -73,12 +85,30 @@ td {
     overflow: hidden;
     transition: background 0.1s;
 }
+
 td:hover { background: #fafafa; cursor: pointer; }
 td.today { background: #f4fdff; }
 td.today::after {
     content: ''; position: absolute; inset: 0;
     border: 1px solid #dadada; pointer-events: none;
 }
+
+td.is-locked {
+  background: #f1f5f9;
+  cursor: not-allowed;
+}
+td.is-locked:hover {
+  background: #f1f5f9;
+  cursor: not-allowed;
+}
+
+
+.mini-btn.danger {
+  background: #fee2e2;
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
 
 .date-num { 
     font-weight: 600; font-size: 1rem; color: #475569; 
@@ -99,9 +129,6 @@ td.today::after {
   align-content: flex-start;
   position: relative;  /* จำเป็นสำหรับ overflow */
 }
-
-
-
 
 .nickname-row {
     display: flex;
@@ -124,31 +151,50 @@ td.today::after {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .badge.student {
-    background-color: #D4FFD8; 
-    color: var(--green);
-    border: 1px solid var(--green);
+  background-color: #f3e8ff;
+  color: #7c3aed;
+  border: 1.5px solid #7c3aed;
 }
+
 .badge.admin {
-    background-color: #D0E8FF; 
-    color: var(--blue);
-    border: 1px solid var(--blue);
+  background-color: #fde2f3;
+  color: #db2777;
+  border: 1.5px solid #db2777;
 }
+
+
 .badge:hover {
     transform: translateY(-1px) scale(1.02); /* เล็กลง ลดการล้น */
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-
 td.is-full { background-color: #fef2f2; cursor: default; }
 .status-full {
     position: absolute; top: 10px; right: 10px;
-    font-size: 0.6rem; font-weight: 700; color: white;
-    background: var(--danger); padding: 2px 6px; border-radius: 4px;
-    background-color: #fee2e2; /* สีแดงอ่อน แสดงเต็ม */
+    font-size: 0.6rem; font-weight: 700;
+    padding: 2px 6px; border-radius: 4px;
+    background-color: #fee2e2;
+    color: #b91c1c;
     cursor: not-allowed;
 }
 
-/* Modal */
+
+.status-locked {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  background: #e5e7eb;
+  color: #374151;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+
+
+
+/******Modal******/
 .modal {
     display: none; position: fixed; inset: 0;
     background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); z-index: 1000;
@@ -156,7 +202,8 @@ td.is-full { background-color: #fef2f2; cursor: default; }
 }
 .modal-content {
     background: white; padding: 32px; max-width: 380px;
-    margin: 40px auto; border-radius: 20px; animation: modalIn 0.3s ease-out; overflow-y: auto;
+    margin: 40px auto; border-radius: 20px; animation: modalIn 0.3s ease-out; 
+    overflow-y: auto; position: relative;
 }
 
 #modalTitle {
@@ -173,7 +220,7 @@ td.is-full { background-color: #fef2f2; cursor: default; }
 @keyframes modalIn { from { opacity:0; transform:translateY(10px) } to { opacity:1; transform:translateY(0) } }
 
 
-adminTitle {
+#adminTitle {
   text-align: center;
 }
 
@@ -184,18 +231,24 @@ input {
 }
 input:focus { border-color: var(--primary); outline:none; background:#fff; }
 input.readonly {
-    background-color: #e5e7eb; 
     cursor: not-allowed;
 }
+input::placeholder {
+    cursor: not-allowed;
+}
+
 
 .btn-group { margin-top:24px; display:flex; gap:8px; }
 .action-btn { flex:1; padding:10px; border:none; border-radius:10px; font-weight:600; cursor:pointer; font-size:0.9rem; }
 .btn-save { background:#D4FFD8; color:var(--green); }
 .btn-delete { background:#fee2e2; color:var(--danger); }
-.btn-close { background:#f1f5f9; color:var(--secondary); }
+.btn-close {position: absolute;top: 12px;right: 12px;
+            background: #fee2e2; color: var(--danger);
+            padding: 6px 10px; font-size: 0.75rem;
+}
 
 
-/* Time slot buttons */
+/******ปุ่ม slot เวลา******/
 .time-slots {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -277,9 +330,9 @@ input.readonly {
 }
 
 
-/* Admin mini button (ดูรายละเอียด) */
+/******* Admin mini button (ดูรายละเอียด) *******/
 .mini-btn {
-  margin-top: 6px;
+  margin: 0;
   padding: 4px 10px;
 
   font-family: inherit;
@@ -287,38 +340,54 @@ input.readonly {
   font-weight: 600;
 
   border-radius: 20px;
-  border: 1px solid #e580a8;
+  border: 1.5px solid var(--action);
 
-  background-color: #ffe6f0; /* โทนเดียวกับ badge.admin */
-  color: #e580a8;
+  background-color: var(--action-bg);
+  color: #4b5563;
 
   cursor: pointer;
   white-space: nowrap;
 
-  transition: 
+  transition:
     background-color 0.2s ease,
     box-shadow 0.2s ease,
     transform 0.2s ease;
 }
 
-/* hover */
 .mini-btn:hover {
-  background-color: #ffe6f0;
+  background-color: #e5e7eb;
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(137, 117, 138, 0.25);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
 }
 
-/* active */
 .mini-btn:active {
   transform: translateY(0);
-  box-shadow: 0 2px 6px rgba(137, 117, 138, 0.25);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
+
+
+
+#adminTitle {
+  text-align: center;
+  color: #64748b;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+}
+
+#adminBody {
+  text-align: left;
+  margin-bottom: 12px;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+
+
 
 /* ป้องกันไปแย่งพื้นที่ใน cell */
 .nickname-row .mini-btn {
   flex-shrink: 0;
 }
-
 
 .date-row {
   display: flex;
@@ -333,6 +402,27 @@ input.readonly {
   color: #475569;
 }
 
-.mini-btn {
-  margin: 0; /* เอา margin-top เดิมออก */
+
+
+/* ปุ่มปิดการจอง (สีแดง) */
+.mini-btn.btn-close-booking {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1.5px solid #ef4444;
+}
+
+.mini-btn.btn-open {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1.5px solid #22c55e;
+}
+
+
+/* hover */
+.mini-btn.btn-close-booking:hover {
+  background: #fecaca;
+}
+
+.mini-btn.btn-open:hover {
+  background: #bbf7d0;
 }
