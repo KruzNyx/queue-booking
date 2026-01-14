@@ -8,42 +8,88 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+
 <div class="container">
-    <h2>ระบบจองคิวทำงาน</h2>
+  <h2>🗓️ ระบบจองคิวทำงาน</h2>
 
-    <div class="calendar-header">
-        <button class="btn-nav" onclick="changeMonth(-1)">‹</button>
-        <div class="slicer-group">
-            <select id="monthSlicer" onchange="jumpToDate()"></select>
-            <select id="yearSlicer" onchange="jumpToDate()"></select>
-        </div>
-        <button class="btn-nav" onclick="changeMonth(1)">›</button>
+  <div class="calendar-header">
+    <button class="btn-nav" onclick="changeMonth(-1)">‹</button>
+    <div class="slicer-group">
+      <select id="monthSlicer" onchange="jumpToDate()"></select>
+      <select id="yearSlicer" onchange="jumpToDate()"></select>
     </div>
+    <button class="btn-nav" onclick="changeMonth(1)">›</button>
+  </div>
 
-    <table id="calendar"></table>
+  <div id="bookingDetail" class="booking-detail" style="display:none;">
+  <h3> รายละเอียดการจอง </h3>
+  <div id="bookingDetailContent"></div>
 </div>
 
+
+  <table id="calendar"></table>
+</div>
+
+<!-- Booking Modal -->
 <div id="modal" class="modal">
-    <div class="modal-content">
-        <h3 id="modalTitle" style="margin-top:0; color:var(--primary)">จองคิว</h3>
-        <p id="modalDateDisplay" style="color:var(--secondary); font-size:0.85rem;"></p>
-        <input type="hidden" id="booking_id">
+  <div class="modal-content">
+    <h3 id="modalTitle"></h3>
+    <p id="modalDateDisplay"></p>
+    <input type="hidden" id="booking_id">
 
-        <label>รหัสนักศึกษา</label>
-        <input type="text" id="student_id">
+    <label>รหัสนักศึกษา </label>
+    <input type="text" id="student_id" maxlength="9">
 
-        <label>ชื่อ–นามสกุล</label>
-        <input type="text" id="full_name">
+    <label>ชื่อ–นามสกุล</label>
+    <input type="text" id="full_name">
 
-        <label>ชื่อเล่น</label>
-        <input type="text" id="nickname">
+    <label>ชื่อเล่น</label>
+    <input type="text" id="nickname">
 
-        <div class="btn-group">
-            <button class="action-btn btn-save" onclick="saveBooking()">บันทึก</button>
-            <button id="delBtn" class="action-btn btn-delete" onclick="deleteBooking()">ยกเลิกคิว</button>
-            <button class="action-btn btn-close" onclick="closeModal()">ปิด</button>
-        </div>
+    <label>เลือกช่วงเวลา 🕗</label>
+<div class="time-slots">
+  <input type="checkbox" id="t1" name="time_slot" value="8.30-9.30">
+  <label for="t1">8.30–9.30</label>
+
+  <input type="checkbox" id="t2" name="time_slot" value="9.30-10.30">
+  <label for="t2">9.30–10.30</label>
+
+  <input type="checkbox" id="t3" name="time_slot" value="10.30-11.30">
+  <label for="t3">10.30–11.30</label>
+
+  <input type="checkbox" id="t4" name="time_slot" value="11.30-12.30">
+  <label for="t4">11.30–12.30</label>
+
+  <input type="checkbox" id="t5" name="time_slot" value="12.30-13.30">
+  <label for="t5">12.30–13.30</label>
+
+  <input type="checkbox" id="t6" name="time_slot" value="13.30-14.30">
+  <label for="t6">13.30–14.30</label>
+
+  <input type="checkbox" id="t7" name="time_slot" value="14.30-15.30">
+  <label for="t7">14.30–15.30</label>
+
+  <input type="checkbox" id="t8" name="time_slot" value="15.30-16.30">
+  <label for="t8">15.30–16.30</label>
+</div>
+
+
+
+    <div class="btn-group">
+      <button class="action-btn btn-save" onclick="saveBooking()">บันทึก</button>
+      <button id="delBtn" class="action-btn btn-delete" onclick="deleteBooking()">ยกเลิก</button>
+      <button class="action-btn btn-close" onclick="closeModal()">ปิด</button>
     </div>
+  </div>
+</div>
+
+<!-- Admin Day View -->
+<div id="adminModal" class="modal">
+  <div class="modal-content">
+    <h3 id="adminTitle"></h3>
+    <div id="adminBody"></div>
+    <button class="action-btn btn-close" onclick="closeAdminModal()">ปิด</button>
+  </div>
 </div>
 
 <script src="script.js"></script>

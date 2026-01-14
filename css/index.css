@@ -86,10 +86,22 @@ td.today::after {
 }
 
 .nickname-container {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 4px;
+
+  /* ให้สูงกว่าเดิมหน่อย เผื่อ hover */
+  height: calc(var(--cell-height) - 18px); /* เดิม -24px เพิ่ม 8px */
+  padding-top: 1px;   /* เว้นบนให้เห็น date-num */
+  overflow-y: auto;
+  overflow-x: hidden;  /* ป้องกัน scroll แนวนอน */
+  align-content: flex-start;
+  position: relative;  /* จำเป็นสำหรับ overflow */
 }
+
+
+
 
 .nickname-row {
     display: flex;
@@ -122,27 +134,48 @@ td.today::after {
     border: 1px solid var(--blue);
 }
 .badge:hover {
-    transform: translateY(-3px) scale(1.05);
+    transform: translateY(-1px) scale(1.02); /* เล็กลง ลดการล้น */
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
+
 
 td.is-full { background-color: #fef2f2; cursor: default; }
 .status-full {
     position: absolute; top: 10px; right: 10px;
     font-size: 0.6rem; font-weight: 700; color: white;
     background: var(--danger); padding: 2px 6px; border-radius: 4px;
+    background-color: #fee2e2; /* สีแดงอ่อน แสดงเต็ม */
+    cursor: not-allowed;
 }
 
 /* Modal */
 .modal {
     display: none; position: fixed; inset: 0;
     background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); z-index: 1000;
+    overflow-y: auto;
 }
 .modal-content {
     background: white; padding: 32px; max-width: 380px;
-    margin: 80px auto; border-radius: 20px; animation: modalIn 0.3s ease-out;
+    margin: 40px auto; border-radius: 20px; animation: modalIn 0.3s ease-out; overflow-y: auto;
 }
+
+#modalTitle {
+  text-align: center;
+}
+
+#modalDateDisplay {
+  text-align: center;
+  margin-bottom: 12px;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
 @keyframes modalIn { from { opacity:0; transform:translateY(10px) } to { opacity:1; transform:translateY(0) } }
+
+
+adminTitle {
+  text-align: center;
+}
 
 label { display:block; margin-top:14px; font-weight:600; font-size:0.8rem; color:var(--secondary); }
 input {
@@ -160,3 +193,146 @@ input.readonly {
 .btn-save { background:#D4FFD8; color:var(--green); }
 .btn-delete { background:#fee2e2; color:var(--danger); }
 .btn-close { background:#f1f5f9; color:var(--secondary); }
+
+
+/* Time slot buttons */
+.time-slots {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.time-slots input {
+    display: none;
+}
+
+.time-slots label {
+    margin: 0;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: #f8fafc;
+    color: var(--secondary);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+/* hover */
+.time-slots label:hover {
+    border-color: var(--primary);
+    background: #f1f5f9;
+}
+
+/* checked */
+.time-slots input:checked + label {
+    background: #D4FFD8;
+    color: var(--green);
+    border-color: var(--green);
+    box-shadow: 0 4px 10px rgba(46,146,76,0.25);
+    transform: translateY(-1px);
+}
+
+.time-slots label.slot-full {
+  background: #e5e7eb;
+  color: #9ca3af;
+  border-color: #d1d5db;
+  cursor: not-allowed;
+}
+.time-slots input:disabled + label {
+  pointer-events: none;
+}
+
+
+.booking-detail {
+  margin-top: 20px;
+  padding: 16px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.booking-detail h3 {
+  margin-bottom: 12px;
+  font-size: 18px;
+}
+
+.slot-group {
+  margin-bottom: 10px;
+}
+
+.slot-title {
+  font-weight: 600;
+  color: #008148;
+}
+
+.slot-user {
+  margin-left: 12px;
+  font-size: 14px;
+  color: #334155;
+}
+
+
+/* Admin mini button (ดูรายละเอียด) */
+.mini-btn {
+  margin-top: 6px;
+  padding: 4px 10px;
+
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+
+  border-radius: 20px;
+  border: 1px solid #e580a8;
+
+  background-color: #ffe6f0; /* โทนเดียวกับ badge.admin */
+  color: #e580a8;
+
+  cursor: pointer;
+  white-space: nowrap;
+
+  transition: 
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+/* hover */
+.mini-btn:hover {
+  background-color: #ffe6f0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(137, 117, 138, 0.25);
+}
+
+/* active */
+.mini-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(137, 117, 138, 0.25);
+}
+
+/* ป้องกันไปแย่งพื้นที่ใน cell */
+.nickname-row .mini-btn {
+  flex-shrink: 0;
+}
+
+
+.date-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.date-num {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #475569;
+}
+
+.mini-btn {
+  margin: 0; /* เอา margin-top เดิมออก */
+}
