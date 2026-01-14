@@ -12,3 +12,6 @@ cd "C:\Users\ACER-ENG\OneDrive - Chiang Mai University\00_Work\queue-booking"
 git status
 git push -u origin main
 
+git add -A
+git commit -m "update all files"
+git push origin main
