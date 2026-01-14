@@ -4,10 +4,10 @@ const SB_KEY = "sb_publishable_S1_LURvzKRzM_JgC4-x2vg_6L_XAN0X";
 const sb = supabase.createClient(SB_URL, SB_KEY);
 
 
-
 const calendarEl = document.getElementById("calendar");
 const modal = document.getElementById("modal");
 const adminModal = document.getElementById("adminModal");
+
 
 const elBookingId = document.getElementById("booking_id");
 const elStudentId = document.getElementById("student_id");
@@ -17,8 +17,8 @@ const elModalTitle = document.getElementById("modalTitle");
 const elModalDate = document.getElementById("modalDateDisplay");
 
 
-
 const delBtn = document.getElementById("delBtn");
+
 
 const monthSlicer = document.getElementById("monthSlicer");
 const yearSlicer = document.getElementById("yearSlicer");
@@ -29,7 +29,6 @@ let lockedDays = {};
 
 const isAdmin =
   new URLSearchParams(window.location.search).get("kaiwan") === "adminroleja";
-
 
 
 function groupByStudent(list) {
@@ -101,8 +100,6 @@ async function toggleDay(dateStr, isClosed) {
 await loadLockedDays();
 renderCalendar();
 }
-
-
 
 
 /****** Calendar ******/
