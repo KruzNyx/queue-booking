@@ -50,17 +50,14 @@ function groupByStudent(list) {
   return Object.values(map);
 }
 
-
-function initSlicers() {
+function initMonthSlicer(){
   const months = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน",
                   "กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+  monthSlicer.innerHTML="";
   months.forEach((m,i)=>monthSlicer.add(new Option(m,i)));
-
-  const y = new Date().getFullYear();
-  for(let i=y-1;i<=y+3;i++){
-    yearSlicer.add(new Option(`พ.ศ. ${i+543}`, i));
-  }
 }
+
+
 
 async function loadBookings() {
   const { data } = await sb
@@ -211,14 +208,20 @@ function changeMonth(o){
   renderCalendar();
 }
 function jumpToDate(){
-  currentViewDate=new Date(yearSlicer.value,monthSlicer.value,1);
+  currentViewDate = new Date(
+    Number(yearSlicer.value),
+    Number(monthSlicer.value),
+    1
+  );
   renderCalendar();
 }
+
 
 /******หน้าจอง******/
 function openAddModal(date){
 
   if (!isAdmin && lockedDays[date]) return;
+  currentModalDate = date;
 
   modal.style.display="block";
   elModalTitle.textContent="จองคิวใหม่";
@@ -254,6 +257,7 @@ function openAddModal(date){
   document.getElementById("saveBtn").disabled = false;
 
   updateTimeSlotAvailability(date);
+  
 }
 
 
@@ -265,6 +269,7 @@ function openEditModal(studentId, date){
     b => b.student_id === studentId && b.work_date === date
   );
   if (!records.length) return;
+  currentModalDate = date;
 
   modal.style.display = "block";
   elModalTitle.textContent = "รายละเอียดการจอง";
@@ -396,7 +401,7 @@ function getSelectedTimeSlots(){
 }
 
 async function saveBooking(){
-  const date = elModalDate.textContent.replace("วันที่ ","");
+  const date = currentModalDate;
 
   if (!isAdmin && lockedDays[date]) {
     alert("วันนี้ปิดการจอง ไม่สามารถแก้ไขได้");
@@ -435,7 +440,7 @@ location.reload();
 
 async function deleteBooking(){
   if(!confirm("ยกเลิกการจองทั้งหมดของวันนี้?")) return;
-  const date = elModalDate.textContent.replace("วันที่ ","");
+  const date = currentModalDate;
   await sb.from("queue_booking")
     .delete()
     .eq("student_id",elStudentId.value)
@@ -444,8 +449,9 @@ closeModal();
 location.reload();
 }
 
-window.onload = async ()=>{
-  initSlicers();
+window.onload = async () => {
+  initMonthSlicer();
+  initYearSlicer();
   await loadBookings();
   await loadLockedDays();
   renderCalendar();
@@ -567,3 +573,13 @@ elAmount.addEventListener("input", () => {
   // กัน cursor 
   elAmount.setSelectionRange(elAmount.value.length, elAmount.value.length);
 });
+
+
+function initYearSlicer() {
+  yearSlicer.innerHTML="";
+  const y = new Date().getFullYear();
+  for (let i = y - 1; i <= y + 3; i++) {
+    yearSlicer.add(new Option(i, i)); // แสดง = ค่า = ค.ศ.
+  }
+}
+
