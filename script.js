@@ -3,7 +3,8 @@ const SB_URL = "https://vadyheyjiygkruehljly.supabase.co";
 const SB_KEY = "sb_publishable_S1_LURvzKRzM_JgC4-x2vg_6L_XAN0X";
 const sb = supabase.createClient(SB_URL, SB_KEY);
 
-/* ---------- State ---------- */
+
+
 const calendarEl = document.getElementById("calendar");
 const modal = document.getElementById("modal");
 const adminModal = document.getElementById("adminModal");
@@ -14,6 +15,9 @@ const elFullName = document.getElementById("full_name");
 const elNickname = document.getElementById("nickname");
 const elModalTitle = document.getElementById("modalTitle");
 const elModalDate = document.getElementById("modalDateDisplay");
+
+
+
 const delBtn = document.getElementById("delBtn");
 
 const monthSlicer = document.getElementById("monthSlicer");
@@ -26,7 +30,8 @@ let lockedDays = {};
 const isAdmin =
   new URLSearchParams(window.location.search).get("kaiwan") === "adminroleja";
 
-/* ---------- Utils ---------- */
+
+
 function groupByStudent(list) {
   const map = {};
   list.forEach(b => {
@@ -45,7 +50,7 @@ function groupByStudent(list) {
   return Object.values(map);
 }
 
-/* ---------- Init ---------- */
+
 function initSlicers() {
   const months = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน",
                   "กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
@@ -100,7 +105,7 @@ renderCalendar();
 
 
 
-/* ---------- Calendar ---------- */
+/****** Calendar ******/
 function renderCalendar() {
   const y = currentViewDate.getFullYear();
   const m = currentViewDate.getMonth();
@@ -122,7 +127,7 @@ function renderCalendar() {
     const dayBookings = allBookings.filter(b => b.work_date === dateStr);
     const students = groupByStudent(dayBookings);
 
-    /* ---------- badge ---------- */
+    /****** badge ******/
     let badges = "";
     students.forEach(s => {
       badges += `
@@ -132,7 +137,7 @@ function renderCalendar() {
         </span>`;
     });
 
-    /* ---------- ปุ่มดูรายละเอียด (ที่เดิม) ---------- */
+    /****** ปุ่มดูรายละเอียด (ที่เดิม) ******/
     let adminDetailBtn = "";
     if (isAdmin && dayBookings.length > 0) {
       adminDetailBtn = `
@@ -142,7 +147,7 @@ function renderCalendar() {
         </button>`;
     }
 
-    /* ---------- ปุ่มปิดการจอง (ที่เดิม) ---------- */
+    /****** ปุ่มปิดการจอง (ที่เดิม) ******/
 const isClosed = lockedDays[dateStr] === true;
 
 
@@ -159,7 +164,7 @@ if (isAdmin) {
 
 
 
-    /* ---------- ตรวจ slot เต็ม ---------- */
+    /******ตรวจ slot เต็ม ******/
     const countMap = {};
     dayBookings.forEach(b => {
       countMap[b.time_slot] = (countMap[b.time_slot] || 0) + 1;
@@ -172,7 +177,7 @@ if (isAdmin) {
       }
     });
 
-    /* ---------- class + สิทธิ์คลิก ---------- */
+    /****** class + สิทธิ์คลิก ******/
 const tdClass =
   (!isAdmin && isClosed) ? "is-locked" : "";
 
@@ -194,9 +199,7 @@ const canClick =
 
         <div class="nickname-container">
           ${badges}
-        </div>
-
-      </td>`;
+        </div></td>`;
 
     if ((d + firstDay) % 7 === 0) html += `</tr><tr>`;
   }
@@ -205,8 +208,6 @@ const canClick =
 }
 
 
-
-/* ---------- Navigation ---------- */
 function changeMonth(o){
   currentViewDate.setMonth(currentViewDate.getMonth()+o);
   renderCalendar();
@@ -216,7 +217,7 @@ function jumpToDate(){
   renderCalendar();
 }
 
-/* ---------- Booking Modal ---------- */
+/******หน้าจอง******/
 function openAddModal(date){
 
   if (!isAdmin && lockedDays[date]) return;
@@ -229,7 +230,7 @@ function openAddModal(date){
 
   elStudentId.value = "";
   elStudentId.readOnly = false;
-  elStudentId.disabled = false; // ✅ ต้องมี
+  elStudentId.disabled = false;
 
   elFullName.value = "";
   elFullName.readOnly = false;
@@ -277,7 +278,7 @@ function openEditModal(studentId, date){
   elNickname.value = records[0].nickname;
   elAmount.value = formatNumberWithComma(String(records[0].amount || 0));
 
-  // 🔒 ล็อค input text ให้เหมือนกันหมด
+  //****** ล็อค input text
   elFullName.readOnly = isReadOnly;
   elFullName.disabled = isReadOnly;
 
@@ -287,14 +288,14 @@ function openEditModal(studentId, date){
   elAmount.readOnly = isReadOnly;
   elAmount.disabled = isReadOnly;
 
-  // 🔒 ล็อค time slot
+  //**** ล็อค time slot
   const slots = records.map(r => r.time_slot);
   document.querySelectorAll(".time-slots input").forEach(c => {
     c.checked = slots.includes(c.value);
     c.disabled = isReadOnly;
   });
 
-  // 🔒 ปุ่ม action
+  //**** ล๊อคปุ่ม action
   delBtn.style.display = isReadOnly ? "none" : "block";
   document.getElementById("saveBtn").disabled = isReadOnly;
 
@@ -332,7 +333,7 @@ function closeModal(){
 
 
 
-/* ---------- Admin Day View ---------- */
+/****** Admin View ******/
 function openAdminDayView(date){
   const list = allBookings.filter(b => b.work_date === date);
   const grouped = {};
@@ -352,7 +353,9 @@ function openAdminDayView(date){
     return toMin(a.split("-")[0]) - toMin(b.split("-")[0]);
   })
   .forEach(slot=>{
-/* เรียงลำดับเวลา*/
+
+
+/* เรียงลำดับเวลา***/
 
 
 
@@ -402,13 +405,13 @@ async function saveBooking(){
   if (!elStudentId.value || !elFullName.value || !slots.length || !amountValue)
     return alert("กรอกข้อมูลไม่ครบ");
 
-  // ลบของเดิมก่อน (กรณีแก้ไข)
+
   await sb.from("queue_booking")
     .delete()
     .eq("student_id", elStudentId.value)
     .eq("work_date", date);
 
-  // Call RPC แค่ครั้งเดียว
+  //*** */ Call RPC ครั้งเดียว
   await sb.rpc("book_queue",{
     p_date: date,
     p_student_id: elStudentId.value,
@@ -420,7 +423,7 @@ async function saveBooking(){
   });
 
 closeModal();
-location.reload(); // 🔄 รีเฟรชหน้าเว็บ
+location.reload();
 
 
 }
@@ -436,7 +439,6 @@ closeModal();
 location.reload();
 }
 
-/* ---------- Start ---------- */
 window.onload = async ()=>{
   initSlicers();
   await loadBookings();
@@ -461,7 +463,6 @@ async function loadBookingDetail(date) {
     return;
   }
 
-  // จัดกลุ่มตามช่วงเวลา
   const grouped = {};
   data.forEach(b => {
     if (!grouped[b.time_slot]) grouped[b.time_slot] = [];
@@ -491,7 +492,7 @@ async function loadBookingDetail(date) {
 function selectDate(date) {
   selectedDate = date;
   renderCalendar();
-  loadBookingDetail(date); // 👈 เพิ่มบรรทัดนี้
+  loadBookingDetail(date);
   
 }
 
@@ -516,14 +517,14 @@ function updateTimeSlotAvailability(date) {
     const label = document.querySelector(`label[for="${input.id}"]`);
     const count = countMap[input.value] || 0;
 
-    // 👑 admin เลือกได้เสมอ
+    // dmin 
     if (isAdmin) {
       input.disabled = false;
       label.classList.remove("slot-full");
       return;
     }
 
-    // 👤 student จำกัด 5 คน
+    // นศ 5 คน
     if (count >= MAX_PER_SLOT && !input.checked) {
       input.disabled = true;
       label.classList.add("slot-full");
@@ -537,7 +538,7 @@ function updateTimeSlotAvailability(date) {
 function formatNumberWithComma(value) {
   if (!value) return "";
 
-  // ลบทุกอย่างที่ไม่ใช่ตัวเลขหรือจุด
+  // delete all ยกเว้นเลข .
   value = value.replace(/[^0-9.]/g, "");
 
   // แยกทศนิยม
@@ -558,6 +559,6 @@ elAmount.addEventListener("input", () => {
 
   elAmount.value = formatNumberWithComma(raw);
 
-  // ไม่ให้ cursor กระโดดแรง
+  // กัน cursor 
   elAmount.setSelectionRange(elAmount.value.length, elAmount.value.length);
 });

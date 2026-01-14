@@ -13,13 +13,13 @@
     --cell-height: 185px;
 
 
-    --student: #7c3aed;        /* ม่วง */
+    --student: #7c3aed;
     --student-bg: #f3e8ff;
 
-    --admin: #db2777;          /* ชมพู */
+    --admin: #db2777;
     --admin-bg: #fde2f3;
 
-    --action: #9ca3af;         /* เทาอ่อน */
+    --action: #9ca3af;
     --action-bg: #f3f4f6;
 }
 
@@ -121,13 +121,12 @@ td.is-locked:hover {
   flex-wrap: wrap;
   gap: 4px;
 
-  /* ให้สูงกว่าเดิมหน่อย เผื่อ hover */
-  height: calc(var(--cell-height) - 18px); /* เดิม -24px เพิ่ม 8px */
-  padding-top: 1px;   /* เว้นบนให้เห็น date-num */
+  height: calc(var(--cell-height) - 18px); /* เดิม -24 */
+  padding-top: 1px;  
   overflow-y: auto;
-  overflow-x: hidden;  /* ป้องกัน scroll แนวนอน */
+  overflow-x: hidden;  /* กัน scroll แนวนอน */
   align-content: flex-start;
-  position: relative;  /* จำเป็นสำหรับ overflow */
+  position: relative;  
 }
 
 .nickname-row {
@@ -383,8 +382,6 @@ input::placeholder {
 
 
 
-
-/* ป้องกันไปแย่งพื้นที่ใน cell */
 .nickname-row .mini-btn {
   flex-shrink: 0;
 }
@@ -404,7 +401,7 @@ input::placeholder {
 
 
 
-/* ปุ่มปิดการจอง (สีแดง) */
+/* ปุ่มปิดการจอง */
 .mini-btn.btn-close-booking {
   background: #fee2e2;
   color: #b91c1c;
@@ -425,4 +422,107 @@ input::placeholder {
 
 .mini-btn.btn-open:hover {
   background: #bbf7d0;
+}
+
+
+
+/* ===============================
+   RESPONSIVE OVERRIDE (ADD ONLY)
+   =============================== */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .container {
+    max-width: 95%;
+    padding: 24px;
+  }
+}
+
+/* Tablet / Mobile */
+@media (max-width: 768px) {
+  body {
+    padding: 24px 12px;
+  }
+
+  .container {
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  /* calendar */
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  th, td {
+    min-width: 120px;
+  }
+
+  :root {
+    --cell-height: 150px;
+  }
+
+  .calendar-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .slicer-group {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+  }
+
+  .slicer-group select {
+    flex: 1;
+  }
+}
+
+/* ทรส */
+@media (max-width: 600px) {
+  h2 {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+  }
+
+  .modal-content {
+    width: 92%;
+    max-width: none;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  .action-btn {
+    font-size: 0.95rem;
+    padding: 12px;
+  }
+
+  .badge {
+    font-size: 0.68rem;
+    padding: 3px 6px;
+  }
+
+  .mini-btn {
+    font-size: 0.65rem;
+    padding: 4px 8px;
+  }
+}
+
+/* มือถือเล็กมาก */
+@media (max-width: 480px) {
+  :root {
+    --cell-height: 135px;
+  }
+
+  .time-slots {
+    grid-template-columns: 1fr;
+  }
+
+  .date-num {
+    font-size: 0.9rem;
+  }
 }

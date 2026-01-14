@@ -8,9 +8,7 @@ http://127.0.0.1:5500/?kaiwan=adminroldja
 
 
 *******อัพเดทไฟล์ github*******
-git init
-git add .
-git commit -m "Initial commit"
-git branch -M main
-git remote add origin https://github.com/KruzNyx/queue-booking.git
+cd "C:\Users\ACER-ENG\OneDrive - Chiang Mai University\00_Work\queue-booking"
+git status
 git push -u origin main
+
