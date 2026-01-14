@@ -273,7 +273,8 @@ function openEditModal(studentId, date){
 
   modal.style.display = "block";
   elModalTitle.textContent = "รายละเอียดการจอง";
-  elModalDate.textContent = "วันที่ " + date;
+  elModalDate.textContent = formatThaiDateAD(date);
+
 
   elBookingId.value = records[0].id;
   elStudentId.value = records[0].student_id;
@@ -583,3 +584,12 @@ function initYearSlicer() {
   }
 }
 
+function formatThaiDateAD(dateStr) {
+  const d = new Date(dateStr);
+  const months = [
+    "มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน",
+    "กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"
+  ];
+
+  return `วันที่ ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+}
