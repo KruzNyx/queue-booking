@@ -25,6 +25,7 @@ const yearSlicer = document.getElementById("yearSlicer");
 
 let currentViewDate = new Date();
 let allBookings = [];
+let editingRole = "student";
 let lockedDays = {};
 
 const isAdmin =
@@ -241,6 +242,9 @@ function openAddModal(date){
   elAmount.readOnly = false;
   elAmount.disabled = false;
 
+
+  editingRole = isAdmin ? "admin" : "student";
+
   document.querySelectorAll(".time-slots input").forEach(c=>{
     c.checked=false;
     c.disabled=false;
@@ -284,6 +288,9 @@ function openEditModal(studentId, date){
 
   elAmount.readOnly = isReadOnly;
   elAmount.disabled = isReadOnly;
+
+  editingRole = records[0].role; // ใช้ role เดิม
+
 
   //**** ล็อค time slot
   const slots = records.map(r => r.time_slot);
@@ -416,7 +423,8 @@ async function saveBooking(){
     p_nickname: elNickname.value,
     p_time_slots: slots,
     p_amount: Number(amountValue),
-    p_role: isAdmin ? "admin" : "student"
+    p_role: editingRole
+
   });
 
 closeModal();
