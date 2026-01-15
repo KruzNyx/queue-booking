@@ -169,12 +169,16 @@ td.is-locked:hover {
 
 td.is-full { background-color: #fef2f2; cursor: default; }
 .status-full {
-    position: absolute; top: 10px; right: 10px;
-    font-size: 0.6rem; font-weight: 700;
-    padding: 2px 6px; border-radius: 4px;
-    background-color: #fee2e2;
-    color: #b91c1c;
-    cursor: not-allowed;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 0.7rem; /* 0.6 */
+  font-weight: 700;
+  padding: 4px 8px;  /* 2px 6px */
+  border-radius: 999px;
+  background-color: #fee2e2;
+  color: #b91c1c;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
 
@@ -399,7 +403,7 @@ input::placeholder {
   color: #475569;
 }
 
-
+td.weekend {background: #f1f5f9; }
 
 /* ปุ่มปิดการจอง */
 .mini-btn.btn-close-booking {
@@ -488,6 +492,11 @@ input::placeholder {
     margin-bottom: 20px;
   }
 
+  .status-full {
+    font-size: 0.75rem;
+    padding: 5px 10px;
+  }
+
   .modal-content {
     width: 92%;
     max-width: none;
@@ -524,5 +533,17 @@ input::placeholder {
 
   .date-num {
     font-size: 0.9rem;
+  }
+}
+
+
+.calendar-day {
+  min-height: 6rem;
+}
+
+@media (max-width: 1024px) {
+  .calendar-day {
+    min-height: 5rem;
+    font-size: 0.85rem;
   }
 }

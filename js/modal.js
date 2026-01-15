@@ -1,0 +1,64 @@
+function openAddModal(date){  
+  // if (!isAdmin && lockedDays[date]) return;
+  if (!isAdmin && (lockedDays[date] || isDayFullyBooked(date))) return;
+  currentModalDate = date;
+
+  modal.style.display="block";
+  elModalTitle.textContent="จองคิวใหม่";
+  elModalDate.textContent="วันที่ "+date;
+
+  // clean  
+  elBookingId.value="";
+  elStudentId.value="";
+  elStudentId.readOnly=false;
+  elFullName.value="";
+  elNickname.value="";
+  elAmount.value="";
+
+  //คนจอง
+  editingRole = isAdmin ? "admin" : "student";
+
+  document.querySelectorAll(".time-slots input").forEach(c=>{
+    c.checked=false;
+    c.disabled=false;
+  });
+
+  delBtn.style.display="none";
+  updateTimeSlotAvailability(date);
+}
+
+function openEditModal(studentId, date){
+    //ดึงdata from sb
+  const records = allBookings.filter(
+    b=>b.student_id===studentId && b.work_date===date
+  );
+  if(!records.length) return;
+
+  currentModalDate = date;
+  modal.style.display="block";
+
+  //fill in data
+  elModalTitle.textContent="รายละเอียดการจอง";
+  elModalDate.textContent=formatThaiDateAD(date);
+
+  elStudentId.value=records[0].student_id;
+  elStudentId.readOnly=true;
+
+  elFullName.value=records[0].full_name;
+  elNickname.value=records[0].nickname;
+  elAmount.value=formatNumberWithComma(String(records[0].amount||0));
+
+  editingRole = records[0].role;
+
+  const slots = records.map(r=>r.time_slot);
+  document.querySelectorAll(".time-slots input").forEach(c=>{
+    c.checked = slots.includes(c.value);
+  });
+
+  delBtn.style.display="block";
+  updateTimeSlotAvailability(date);
+}
+
+function closeModal(){
+  modal.style.display="none";
+}
