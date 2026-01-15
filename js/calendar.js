@@ -54,19 +54,28 @@ function renderCalendar() {
     const students = groupByStudent(dayBookings);
 
     const isFullDay = isDayFullyBooked(dateStr);
+    const isClosed  = lockedDays[dateStr] === true;
 
-    // const isClosed = lockedDays[dateStr] ?? isWeekend(dateStr);
-
-    const isClosed = lockedDays[dateStr] ?? (!isAdmin && (isWeekend(dateStr) || isFullDay));
-    const canClick = isAdmin || !isClosed;
+    // const isClosed = lockedDays[dateStr] ?? (!isAdmin && (isWeekend(dateStr) || isFullDay));
+    const canClick  = isAdmin || !isClosed;
 
     // ชื่อเล่นนศที่จอง
+    const canEdit = isAdmin || !isDayFullyBooked(dateStr);
     let badges = "";
     students.forEach(s=>{
-      badges += `<span class="badge ${s.role}"
-        onclick="event.stopPropagation(); openEditModal('${s.student_id}','${dateStr}')">
-        ${s.nickname}
-      </span>`;
+
+badges += `<span class="badge ${s.role}"
+  onclick="event.stopPropagation(); openEditModal('${s.student_id}','${dateStr}')">
+  ${s.nickname}
+</span>`;
+
+
+
+    //   badges += `<span class="badge ${s.role}"
+    //     ${canEdit
+    //         ? 'onclick="event.stopPropagation(); openEditModal('${s.student_id}','${dateStr}')"':}>
+    //         ${s.nickname}
+    //   </span>`;
     });
 
     // ปุ่มแอดมิน
@@ -82,9 +91,17 @@ function renderCalendar() {
     }
 
     // ช่องวัน
-    html += `
-      <td class="${isWeekend(dateStr)?"weekend":""} ${!isAdmin&&isClosed?"is-locked":""}"
-        ${canClick?`onclick="openAddModal('${dateStr}')"`:""}>
+    // html += `
+    //   td class="${isWeekend(dateStr)?"weekend":""} ${!isAdmin&&isClosed?"is-locked":""}"
+    //     ${canClick?`onclick="openAddModal('${dateStr}')"`:""}>
+        html += `
+        <td class="
+        ${isWeekend(dateStr) ? "weekend" : ""}
+        ${!isAdmin && isClosed ? "is-locked" : ""}
+        ${!isAdmin && !isClosed && isFullDay ? "is-full" : ""}
+        "
+        ${canClick ? `onclick="openAddModal('${dateStr}')"` : ""}>
+
         <div class="date-row">
           <span class="date-num">${d}</span>
           ${adminBtns}
@@ -93,7 +110,7 @@ function renderCalendar() {
 
         ${(!isAdmin && isFullDay) ? `<span class="status-full">เต็ม</span>` : ""}
 
-      </td>`;
+        </td>`;
 
     if ((d+firstDay)%7===0) html += `</tr><tr>`;
   }

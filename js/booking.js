@@ -6,9 +6,10 @@ async function saveBooking(){
   const date = currentModalDate;
 
     // user กดแก้ไขวันปิดจองไม่ได้
+    // if (!isAdmin && lockedDays[date] === true) {
     if (!isAdmin && lockedDays[date] === true) {
         alert("วันนี้ปิดการจอง ไม่สามารถแก้ไขได้");
-    return;
+        return;
     }
    
   // แสดงข้อมูล  
@@ -41,6 +42,7 @@ async function saveBooking(){
 }
 
 async function deleteBooking(){
+  // if (!isAdmin && lockedDays[currentModalDate] === true) {
   if (!isAdmin && lockedDays[currentModalDate] === true) {
     alert("วันนี้ปิดการจอง ไม่สามารถยกเลิกได้");
     return;
@@ -58,28 +60,55 @@ async function deleteBooking(){
 }
 
 
+// function updateTimeSlotAvailability(date){
+//   const countMap = {};
+//   allBookings.filter(b=>b.work_date===date)
+//     .forEach(b=>countMap[b.time_slot]=(countMap[b.time_slot]||0)+1);
+
+//   document.querySelectorAll(".time-slots input").forEach(input=>{
+//     const label=document.querySelector(`label[for="${input.id}"]`);
+//     const count=countMap[input.value]||0;
+
+//     if(isAdmin){
+//       input.disabled=false;
+//       label.classList.remove("slot-full");
+//       return;
+//     }
+
+//     // ล๊อคถ้า slot เต็ฒ
+//     if(count>=MAX_PER_SLOT && !input.checked){
+//       input.disabled=true;
+//       label.classList.add("slot-full");
+//     }else{
+//       input.disabled=false;
+//       label.classList.remove("slot-full");
+//     }
+//   });
+// }
+
+
 function updateTimeSlotAvailability(date){
   const countMap = {};
-  allBookings.filter(b=>b.work_date===date)
-    .forEach(b=>countMap[b.time_slot]=(countMap[b.time_slot]||0)+1);
+  allBookings
+    .filter(b => b.work_date === date)
+    .forEach(b => countMap[b.time_slot] = (countMap[b.time_slot] || 0) + 1);
 
   document.querySelectorAll(".time-slots input").forEach(input=>{
-    const label=document.querySelector(`label[for="${input.id}"]`);
-    const count=countMap[input.value]||0;
+    const label = document.querySelector(`label[for="${input.id}"]`);
 
-    if(isAdmin){
-      input.disabled=false;
-      label.classList.remove("slot-full");
-      return;
-    }
+    // reset ทุกครั้ง
+    input.disabled = false;
+    label.classList.remove("slot-full");
 
-    // ล๊อคถ้า slot เต็ฒ
-    if(count>=MAX_PER_SLOT && !input.checked){
-      input.disabled=true;
+    if (isAdmin) return;
+
+    const count = countMap[input.value] || 0;
+
+    // slot เต็มจริง → ล็อก (ยกเว้น slot ของตัวเอง)
+    if (count >= MAX_PER_SLOT && !input.checked) {
+      input.disabled = true;
       label.classList.add("slot-full");
-    }else{
-      input.disabled=false;
-      label.classList.remove("slot-full");
     }
   });
 }
+

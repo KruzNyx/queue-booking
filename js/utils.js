@@ -50,20 +50,37 @@ function formatNumberWithComma(value) {
 }
 
 // check if it all booked
+// function isDayFullyBooked(dateStr){
+//   const dayBookings = allBookings.filter(b => b.work_date === dateStr);
+//   const countMap = {};
+
+//   dayBookings.forEach(b=>{
+//     countMap[b.time_slot] = (countMap[b.time_slot] || 0) + 1;
+//   });
+
+//   const allSlots = [
+//     "8.30-9.30","9.30-10.30","10.30-11.30","11.30-12.30",
+//     "13.00-14.00","14.00-15.00","15.00-16.00","16.00-17.00"
+//   ];
+
+//   return allSlots.every(
+//     slot => (countMap[slot] || 0) >= MAX_PER_SLOT
+//   );
+// }
+
+
 function isDayFullyBooked(dateStr){
-  const dayBookings = allBookings.filter(b => b.work_date === dateStr);
   const countMap = {};
+  allBookings
+    .filter(b => b.work_date === dateStr)
+    .forEach(b => {
+      countMap[b.time_slot] = (countMap[b.time_slot] || 0) + 1;
+    });
 
-  dayBookings.forEach(b=>{
-    countMap[b.time_slot] = (countMap[b.time_slot] || 0) + 1;
-  });
+  const allSlots = [...document.querySelectorAll(".time-slots input")]
+    .map(i => i.value);
 
-  const allSlots = [
-    "8.30-9.30","9.30-10.30","10.30-11.30","11.30-12.30",
-    "13.00-14.00","14.00-15.00","15.00-16.00","16.00-17.00"
-  ];
-
-  return allSlots.every(
+  return allSlots.length > 0 && allSlots.every(
     slot => (countMap[slot] || 0) >= MAX_PER_SLOT
   );
 }

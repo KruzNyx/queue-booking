@@ -28,6 +28,7 @@ function openAddModal(date){
 }
 
 function openEditModal(studentId, date){
+// if (!isAdmin && isDayFullyBooked(date)) return;
     //ดึงdata from sb
   const records = allBookings.filter(
     b=>b.student_id===studentId && b.work_date===date
@@ -55,10 +56,43 @@ function openEditModal(studentId, date){
     c.checked = slots.includes(c.value);
   });
 
-  delBtn.style.display="block";
+    const isReadonly = !isAdmin && lockedDays[date] === true;
+
+
+  document.querySelectorAll("input, select, textarea").forEach(el=>{
+    el.disabled = isReadonly;
+  });
+
+  delBtn.style.display = isReadonly ? "none" : "block";
+
   updateTimeSlotAvailability(date);
+if (!isAdmin) {
+  const countMap = {};
+  allBookings
+    .filter(b=>b.work_date===date)
+    .forEach(b=>countMap[b.time_slot]=(countMap[b.time_slot]||0)+1);
+
+  document.querySelectorAll(".time-slots input").forEach(input=>{
+    const count = countMap[input.value] || 0;
+
+    // slot นี้เต็ม และไม่ใช่ slot ของตัวเอง → ล็อก
+    if (count >= MAX_PER_SLOT && !input.checked) {
+      input.disabled = true;
+    }
+  });
+}
+
+
 }
 
 function closeModal(){
   modal.style.display="none";
+
+  document.querySelectorAll("input, select, textarea").forEach(el=>{
+    el.disabled = false;
+  });
+
+  document.querySelectorAll(".time-slots label")
+    .forEach(l=>l.classList.remove("slot-full"));
 }
+
