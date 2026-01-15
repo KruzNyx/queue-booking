@@ -1,6 +1,6 @@
 function openAdminDayView(date){
   const list = allBookings.filter(b=>b.work_date===date);
-  
+
   // list นศ ตามเวลาที่ลง
   const grouped = {};
   list.forEach(b=>{
@@ -9,17 +9,24 @@ function openAdminDayView(date){
   });
 
   let html="";
-  Object.keys(grouped).sort().forEach(slot=>{
-    html+=`
+  Object.keys(grouped).sort((a, b) => {
+    const toMin = t => {
+      const [h, m] = t.split("-")[0].split(".").map(Number);
+      return h * 60 + m;
+    };
+    return toMin(a) - toMin(b);
+  }).forEach(slot => {
+    html += `
       <div><strong>${slot}</strong>
         <ul>
-          ${grouped[slot].map(b=>`<li>${b.nickname}</li>`).join("")}
+          ${grouped[slot].map(b => `<li>${b.nickname}</li>`).join("")}
         </ul>
       </div>`;
   });
 
+
   document.getElementById("adminTitle").textContent =
-    "📆 วันที่ "+formatThaiDate(date);
+    "📆 วันที่ "+formatThaiDateAD(date);
   document.getElementById("adminBody").innerHTML = html || "<p>ไม่มีข้อมูล</p>";
   adminModal.style.display="block";
 }

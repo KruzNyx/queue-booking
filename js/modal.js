@@ -5,7 +5,7 @@ function openAddModal(date){
 
   modal.style.display="block";
   elModalTitle.textContent="จองคิวใหม่";
-  elModalDate.textContent="วันที่ "+date;
+  elModalDate.textContent=formatThaiDateAD(date);
 
   // clean  
   elBookingId.value="";
