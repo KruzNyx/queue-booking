@@ -24,9 +24,25 @@ async function loadLockedDays(){
 }
 
 // เปิด-ปิดวัน
+// async function toggleDay(dateStr, isClosed) {
+//   await sb.from("booking_day_lock")
+//     .upsert({ work_date: dateStr, is_locked: !isClosed }, { onConflict: "work_date" });
+//   await loadLockedDays();
+//   renderCalendar();
+// }
 async function toggleDay(dateStr, isClosed) {
-  await sb.from("booking_day_lock")
-    .upsert({ work_date: dateStr, is_locked: !isClosed }, { onConflict: "work_date" });
+  await fetch("/api/admin/toggle-day", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-admin-email": adminEmail
+    },
+    body: JSON.stringify({
+      date: dateStr,
+      isClosed
+    })
+  });
+
   await loadLockedDays();
   renderCalendar();
 }
@@ -40,6 +56,8 @@ function renderCalendar() {
 
   const firstDay = new Date(y, m, 1).getDay();
   const totalDays = new Date(y, m + 1, 0).getDate();
+
+
 
   let html = `<thead><tr>`;
   ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(d => html += `<th>${d}</th>`);
@@ -56,27 +74,41 @@ function renderCalendar() {
     const isFullDay = isDayFullyBooked(dateStr);
     const isClosed  = lockedDays[dateStr] === true;
 
+let isOutOfWeek = false;
+let isInWeek = false;
+
+if (!isAdmin && selectedWeekRange) {
+  isOutOfWeek =
+    dateStr < selectedWeekRange.start ||
+    dateStr > selectedWeekRange.end;
+
+  isInWeek = !isOutOfWeek;
+}
+
+
     // const isClosed = lockedDays[dateStr] ?? (!isAdmin && (isWeekend(dateStr) || isFullDay));
-    const canClick  = isAdmin || !isClosed;
-
     // ชื่อเล่นนศที่จอง
-    const canEdit = isAdmin || !isDayFullyBooked(dateStr);
-    let badges = "";
-    students.forEach(s=>{
+let badges = "";
 
-badges += `<span class="badge ${s.role}"
-  onclick="event.stopPropagation(); openEditModal('${s.student_id}','${dateStr}')">
-  ${s.nickname}
-</span>`;
+students.forEach(s => {
+  const canEditBooking =
+    isAdmin ||
+    (
+      !isAdmin &&
+      s.role === "student" &&
+      s.student_id === currentStudentId
+    );
+
+  badges += `<span class="badge ${s.role} ${!canEditBooking ? "readonly" : ""}"
+    ${canEditBooking
+      ? `onclick="event.stopPropagation(); openEditModal('${s.student_id}','${dateStr}')"`
+      : ""}
+  >
+    ${s.nickname}
+  </span>`;
+});
 
 
-
-    //   badges += `<span class="badge ${s.role}"
-    //     ${canEdit
-    //         ? 'onclick="event.stopPropagation(); openEditModal('${s.student_id}','${dateStr}')"':}>
-    //         ${s.nickname}
-    //   </span>`;
-    });
 
     // ปุ่มแอดมิน
     let adminBtns = "";
@@ -94,29 +126,43 @@ badges += `<span class="badge ${s.role}"
     // html += `
     //   td class="${isWeekend(dateStr)?"weekend":""} ${!isAdmin&&isClosed?"is-locked":""}"
     //     ${canClick?`onclick="openAddModal('${dateStr}')"`:""}>
-        html += `
-        <td class="
-        ${isWeekend(dateStr) ? "weekend" : ""}
-        ${!isAdmin && isClosed ? "is-locked" : ""}
-        ${!isAdmin && !isClosed && isFullDay ? "is-full" : ""}
-        "
-        ${canClick ? `onclick="openAddModal('${dateStr}')"` : ""}>
 
-        <div class="date-row">
-          <span class="date-num">${d}</span>
-          ${adminBtns}
-        </div>
-        <div class="nickname-container">${badges}</div>
+// ===== สร้าง td =====
 
-        ${(!isAdmin && isFullDay) ? `<span class="status-full">เต็ม</span>` : ""}
+const canClick = isAdmin
+  || (!isClosed && !isOutOfWeek && !isFullDay);
 
-        </td>`;
+html += `
+<td class="
+  ${isWeekend(dateStr) ? "weekend" : ""}
+  ${isInWeek ? "is-in-week" : ""}
+  ${isOutOfWeek ? "is-out-week" : ""}
+  ${!isAdmin && isClosed ? "is-locked" : ""}
+  ${!isAdmin && !isClosed && isFullDay ? "is-full" : ""}
+"
+
+
+${canClick ? `onclick="openAddModal('${dateStr}')"` : ""}
+
+  <div class="date-row">
+    <span class="date-num">${d}</span>
+    ${adminBtns}
+  </div>
+
+  <div class="nickname-container">${badges}</div>
+
+  ${(!isAdmin && isFullDay) ? `<span class="status-full">เต็ม</span>` : ""}
+
+</td>
+`;
+
 
     if ((d+firstDay)%7===0) html += `</tr><tr>`;
   }
 
   calendarEl.innerHTML = html + `</tr></tbody>`;
 }
+
 
 // ปุ่มเปลี่ยนวัน ซ็าย ขวา
 function changeMonth(step){

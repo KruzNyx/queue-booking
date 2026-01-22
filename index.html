@@ -12,6 +12,15 @@
 <div class="container">
   <h2>🗓️ ระบบจองคิวทำงาน</h2>
 
+<div style="margin-bottom:10px;">
+  <input
+    id="adminEmailInput"
+    type="email"
+    placeholder="กรอกอีเมลแอดมิน"
+  >
+  <button onclick="loginAdmin()">เข้าสู่โหมดแอดมิน</button>
+</div>
+
   <div class="calendar-header">
     <button class="btn-nav" onclick="changeMonth(-1)">‹</button>
     <div class="slicer-group">
@@ -44,6 +53,9 @@
     <label>จำนวนเงิน</label>
     <input id="amount">
 
+    <label>เลือกวัน (สำหรับจองหลายวัน)</label>
+    <div id="weekDaySelector" class="week-selector"></div>
+
     <label>ช่วงเวลา</label>
     <div class="time-slots">
       <input id="t1" type="checkbox" value="8.30-9.30"><label for="t1">8.30-9.30</label>
@@ -55,7 +67,6 @@
       <input id="t7" type="checkbox" value="15.00-16.00"><label for="t7">15.00-16.00</label>
       <input id="t8" type="checkbox" value="16.00-17.00"><label for="t8">16.00-17.00</label>
     
-
     </div>
 
     <div class="btn-group">

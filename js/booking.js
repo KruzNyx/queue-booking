@@ -3,43 +3,50 @@ function getSelectedTimeSlots(){
 }
 
 async function saveBooking(){
-  const date = currentModalDate;
-
-    // user กดแก้ไขวันปิดจองไม่ได้
-    // if (!isAdmin && lockedDays[date] === true) {
-    if (!isAdmin && lockedDays[date] === true) {
-        alert("วันนี้ปิดการจอง ไม่สามารถแก้ไขได้");
-        return;
-    }
-   
-  // แสดงข้อมูล  
+async function saveBooking() {
+  const amount = Number(elAmount.value.replace(/,/g, ""));
   const slots = getSelectedTimeSlots();
-  const amount = Number(elAmount.value.replace(/,/g,""));
 
-  // col ที่ต้องกรอกให้ครบ  
-  if(!elStudentId.value||!elFullName.value||!slots.length||!amount)
-    return alert("กรอกข้อมูลไม่ครบ");
+  if (!elStudentId.value || !elFullName.value || !slots.length || !amount) {
+    alert("กรอกข้อมูลไม่ครบ");
+    return;
+  }
 
-  // ลบการจองเพิ่มเติมของวันนั้น ?  
-  await sb.from("queue_booking")
-    .delete()
-    .eq("student_id", elStudentId.value)
-    .eq("work_date", date);
+  if (!isAdmin) {
+    const weeklyUsed = getWeeklyBookedHours(elStudentId.value, currentModalDate);
+    const allowed = getAllowedHours(amount);
+    const willUse = slots.length * selectedDates.length;
 
-  // อัพเดท
-  await sb.rpc("book_queue",{
-    p_date: date,
-    p_student_id: elStudentId.value,
-    p_full_name: elFullName.value,
-    p_nickname: elNickname.value,
-    p_time_slots: slots,
-    p_amount: amount,
-    p_role: editingRole
+    if (weeklyUsed + willUse > allowed) {
+      alert(`สัปดาห์นี้จองได้ไม่เกิน ${allowed} ชั่วโมง`);
+      return;
+    }
+  }
+
+  const res = await fetch("/api/booking/save", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      student_id: elStudentId.value,
+      full_name: elFullName.value,
+      nickname: elNickname.value,
+      amount,
+      dates: selectedDates,
+      slots
+    })
   });
 
+  const data = await res.json();
+
+  if (!res.ok) {
+    alert(data.error || "เกิดข้อผิดพลาด");
+    return;
+  }
+
   closeModal();
-  location.reload();
-}
+  await loadBookings();
+  renderCalendar();
+}}
 
 async function deleteBooking(){
   // if (!isAdmin && lockedDays[currentModalDate] === true) {
@@ -50,41 +57,21 @@ async function deleteBooking(){
 
   if(!confirm("ยกเลิกการจองทั้งหมดของวันนี้?")) return;
 
-  await sb.from("queue_booking")
-    .delete()
-    .eq("student_id", elStudentId.value)
-    .eq("work_date", currentModalDate);
+  await fetch("/api/admin/delete-booking", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-admin-email": adminEmail
+    },
+    body: JSON.stringify({
+      student_id: elStudentId.value,
+      work_date: currentModalDate
+    })
+  });
 
   closeModal();
   location.reload();
 }
-
-
-// function updateTimeSlotAvailability(date){
-//   const countMap = {};
-//   allBookings.filter(b=>b.work_date===date)
-//     .forEach(b=>countMap[b.time_slot]=(countMap[b.time_slot]||0)+1);
-
-//   document.querySelectorAll(".time-slots input").forEach(input=>{
-//     const label=document.querySelector(`label[for="${input.id}"]`);
-//     const count=countMap[input.value]||0;
-
-//     if(isAdmin){
-//       input.disabled=false;
-//       label.classList.remove("slot-full");
-//       return;
-//     }
-
-//     // ล๊อคถ้า slot เต็ฒ
-//     if(count>=MAX_PER_SLOT && !input.checked){
-//       input.disabled=true;
-//       label.classList.add("slot-full");
-//     }else{
-//       input.disabled=false;
-//       label.classList.remove("slot-full");
-//     }
-//   });
-// }
 
 
 function updateTimeSlotAvailability(date){
@@ -95,20 +82,46 @@ function updateTimeSlotAvailability(date){
 
   document.querySelectorAll(".time-slots input").forEach(input=>{
     const label = document.querySelector(`label[for="${input.id}"]`);
-
-    // reset ทุกครั้ง
     input.disabled = false;
     label.classList.remove("slot-full");
 
     if (isAdmin) return;
 
-    const count = countMap[input.value] || 0;
-
-    // slot เต็มจริง → ล็อก (ยกเว้น slot ของตัวเอง)
-    if (count >= MAX_PER_SLOT && !input.checked) {
+    // ล็อกเฉพาะ slot ที่เต็มจริง
+    if ((countMap[input.value] || 0) >= MAX_PER_SLOT && !input.checked) {
       input.disabled = true;
       label.classList.add("slot-full");
     }
   });
 }
+
+
+
+
+// function updateTimeSlotAvailability(date){
+//   const countMap = {};
+//   allBookings
+//     .filter(b => b.work_date === date)
+//     .forEach(b => countMap[b.time_slot] = (countMap[b.time_slot] || 0) + 1);
+
+//   document.querySelectorAll(".time-slots input").forEach(input=>{
+//     const label = document.querySelector(`label[for="${input.id}"]`);
+
+//     // reset ทุกครั้ง
+//     input.disabled = false;
+//     label.classList.remove("slot-full");
+
+//     // if (isAdmin) return;
+
+//     // const count = countMap[input.value] || 0;
+
+//     // // slot เต็มจริง → ล็อก (ยกเว้น slot ของตัวเอง)
+//     // if (count >= MAX_PER_SLOT && !input.checked) {
+//     //   input.disabled = true;
+//     //   label.classList.add("slot-full");
+//     // }
+
+//   });
+// }
+
 

@@ -49,25 +49,6 @@ function formatNumberWithComma(value) {
   return decimal !== undefined ? `${integer}.${decimal}` : integer;
 }
 
-// check if it all booked
-// function isDayFullyBooked(dateStr){
-//   const dayBookings = allBookings.filter(b => b.work_date === dateStr);
-//   const countMap = {};
-
-//   dayBookings.forEach(b=>{
-//     countMap[b.time_slot] = (countMap[b.time_slot] || 0) + 1;
-//   });
-
-//   const allSlots = [
-//     "8.30-9.30","9.30-10.30","10.30-11.30","11.30-12.30",
-//     "13.00-14.00","14.00-15.00","15.00-16.00","16.00-17.00"
-//   ];
-
-//   return allSlots.every(
-//     slot => (countMap[slot] || 0) >= MAX_PER_SLOT
-//   );
-// }
-
 
 function isDayFullyBooked(dateStr){
   const countMap = {};
@@ -77,10 +58,46 @@ function isDayFullyBooked(dateStr){
       countMap[b.time_slot] = (countMap[b.time_slot] || 0) + 1;
     });
 
-  const allSlots = [...document.querySelectorAll(".time-slots input")]
-    .map(i => i.value);
-
-  return allSlots.length > 0 && allSlots.every(
+    return ALL_TIME_SLOTS.every(
     slot => (countMap[slot] || 0) >= MAX_PER_SLOT
   );
 }
+
+function getWeekRange(dateStr){
+  const d = new Date(dateStr);
+  const day = d.getDay() || 7; // จ.-ศ.
+  const monday = new Date(d);
+  monday.setDate(d.getDate() - day + 1);
+  const friday = new Date(monday);
+  friday.setDate(monday.getDate() + 4);
+
+  const fmt = d =>
+    `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+
+  return { start: fmt(monday), end: fmt(friday) };
+}
+
+function getWeeklyBookedHours(studentId, dateStr){
+  const { start, end } = getWeekRange(dateStr);
+
+  return allBookings.filter(b =>
+    b.student_id === studentId &&
+    b.work_date >= start &&
+    b.work_date <= end
+  ).length; // 1 slot = 1 ชั่วโมง
+}
+
+
+function getAllowedHours(amount){
+  const rule = WEEKLY_HOUR_RULES.find(r =>
+    amount >= r.min && amount <= r.max
+  );
+  return rule ? rule.maxHours : 0;
+}
+
+
+const ALL_TIME_SLOTS = [
+  "8.30-9.30","9.30-10.30","10.30-11.30","11.30-12.30",
+  "13.00-14.00","14.00-15.00","15.00-16.00","16.00-17.00"
+];
+

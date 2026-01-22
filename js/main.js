@@ -1,3 +1,12 @@
+// window.onload = async () => {
+//   currentViewDate = new Date(ALLOWED_YEAR, ALLOWED_MONTHS[0], 1);
+//   initMonthSlicer();
+//   initYearSlicer();
+//   await loadBookings();
+//   await loadLockedDays();
+//   renderCalendar();
+// };
+
 window.onload = async () => {
   currentViewDate = new Date(ALLOWED_YEAR, ALLOWED_MONTHS[0], 1);
   initMonthSlicer();
@@ -6,6 +15,8 @@ window.onload = async () => {
   await loadLockedDays();
   renderCalendar();
 };
+
+
 
 elAmount.addEventListener("input",()=>{
   elAmount.value = formatNumberWithComma(elAmount.value);
