@@ -35,28 +35,13 @@ document.getElementById("weekDaySelector").style.display = "flex";
 function openEditModal(studentId, date){
 // if (!isAdmin && isDayFullyBooked(date)) return;
     //ดึงdata from sb
-const booking = allBookings.find(
-  b => b.student_id === studentId && b.work_date === date
-);
-
-if (!booking) return;
-
-if (!isAdmin) {
-  if (
-    booking.role === "admin" ||
-    booking.student_id !== currentStudentId
-  ) {
-    return alert("❌ คุณไม่มีสิทธิ์แก้ไขรายการนี้");
-  }
-}
-
+  const records = allBookings.filter(
+    b=>b.student_id===studentId && b.work_date===date
+  );
 
   selectedDates = [date];
 selectedWeekRange = null;
-
-const records = allBookings.filter(
-  b => b.student_id === studentId && b.work_date === date
-);
+document.getElementById("weekDaySelector").style.display = "none";
 
 
   if(!records.length) return;
@@ -75,31 +60,24 @@ const records = allBookings.filter(
   elNickname.value=records[0].nickname;
   elAmount.value=formatNumberWithComma(String(records[0].amount||0));
 
-  editingRole = booking.role;
-
+  editingRole = records[0].role;
 
   const slots = records.map(r=>r.time_slot);
   document.querySelectorAll(".time-slots input").forEach(c=>{
     c.checked = slots.includes(c.value);
   });
 
-const canDelete =
-  isAdmin ||
-  (
-    booking.role === "student" &&
-    booking.student_id === currentStudentId
-  );
+    const isReadonly = !isAdmin && lockedDays[date] === true;
+if (isEditMode) {
+  document.getElementById("weekDaySelector").style.display = "none";
+}
 
-delBtn.style.display = canDelete ? "block" : "none";
 
-const isReadonly =
-  !isAdmin &&
-  booking.role === "admin";
+  document.querySelectorAll("input, select, textarea").forEach(el=>{
+    el.disabled = isReadonly;
+  });
 
-document.querySelectorAll("input, select, textarea").forEach(el=>{
-  el.disabled = isReadonly;
-});
-
+  delBtn.style.display = isReadonly ? "none" : "block";
 
   updateTimeSlotAvailability(date);
 if (!isAdmin) {

@@ -12,20 +12,19 @@ export default async function handler(req, res) {
     return res.status(401).json({ isAdmin: false });
   }
 
-const { data, error } = await supabase
-  .from("admin_permissions")
-  .select("role")
-  .eq("email", email)
-  .eq("active", true)
-  .single();
+  const { data } = await supabase
+    .from("admin_permissions")
+    .select("role")
+    .eq("email", email)
+    .eq("active", true)
+    .single();
 
-if (!data) {
-  return res.json({ isAdmin: false });
-}
+  if (!data) {
+    return res.status(403).json({ isAdmin: false });
+  }
 
-res.json({
-  isAdmin: true,
-  role: data.role
-});
-
+  res.json({
+    isAdmin: true,
+    role: data.role
+  });
 }

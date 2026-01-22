@@ -8,9 +8,6 @@ let editingRole = "student";
 let selectedDates = [];
 let selectedWeekRange = null;
 
-let isAdmin = false;
-let adminEmail = "";
-
 
 // element
 const calendarEl = document.getElementById("calendar");

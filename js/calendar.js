@@ -24,25 +24,9 @@ async function loadLockedDays(){
 }
 
 // เปิด-ปิดวัน
-// async function toggleDay(dateStr, isClosed) {
-//   await sb.from("booking_day_lock")
-//     .upsert({ work_date: dateStr, is_locked: !isClosed }, { onConflict: "work_date" });
-//   await loadLockedDays();
-//   renderCalendar();
-// }
 async function toggleDay(dateStr, isClosed) {
-  await fetch("/api/admin/toggle-day", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-admin-email": adminEmail
-    },
-    body: JSON.stringify({
-      date: dateStr,
-      isClosed
-    })
-  });
-
+  await sb.from("booking_day_lock")
+    .upsert({ work_date: dateStr, is_locked: !isClosed }, { onConflict: "work_date" });
   await loadLockedDays();
   renderCalendar();
 }
@@ -88,27 +72,23 @@ if (!isAdmin && selectedWeekRange) {
 
     // const isClosed = lockedDays[dateStr] ?? (!isAdmin && (isWeekend(dateStr) || isFullDay));
     // ชื่อเล่นนศที่จอง
-let badges = "";
+    const canEdit = isAdmin || !isDayFullyBooked(dateStr);
+    let badges = "";
+    students.forEach(s=>{
 
-students.forEach(s => {
-  const canEditBooking =
-    isAdmin ||
-    (
-      !isAdmin &&
-      s.role === "student" &&
-      s.student_id === currentStudentId
-    );
-
-  badges += `<span class="badge ${s.role} ${!canEditBooking ? "readonly" : ""}"
-    ${canEditBooking
-      ? `onclick="event.stopPropagation(); openEditModal('${s.student_id}','${dateStr}')"`
-      : ""}
-  >
-    ${s.nickname}
-  </span>`;
-});
+badges += `<span class="badge ${s.role}"
+  onclick="event.stopPropagation(); openEditModal('${s.student_id}','${dateStr}')">
+  ${s.nickname}
+</span>`;
 
 
+
+    //   badges += `<span class="badge ${s.role}"
+    //     ${canEdit
+    //         ? 'onclick="event.stopPropagation(); openEditModal('${s.student_id}','${dateStr}')"':}>
+    //         ${s.nickname}
+    //   </span>`;
+    });
 
     // ปุ่มแอดมิน
     let adminBtns = "";
@@ -162,6 +142,9 @@ ${canClick ? `onclick="openAddModal('${dateStr}')"` : ""}
 
   calendarEl.innerHTML = html + `</tr></tbody>`;
 }
+
+f
+
 
 
 // ปุ่มเปลี่ยนวัน ซ็าย ขวา
