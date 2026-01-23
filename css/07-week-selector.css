@@ -1,0 +1,53 @@
+.week-selector {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+
+  padding: 6px 8px;
+  margin: 0 auto 12px;
+
+  border-radius: 999px;
+}
+
+.week-day {
+  flex-shrink: 0;
+  min-width: 48px;
+  padding: 6px 8px;
+
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: #475569;
+
+  cursor: pointer;
+  user-select: none;
+}
+
+.week-day input { display: none; }
+
+.week-day:has(input:checked) {
+  background: #D4FFD8;
+  color: var(--green);
+  border-color: var(--green);
+}
+
+/* วันแรก */
+.week-day.first-day {
+  background: #e0f2fe;
+  color: #0369a1;
+  border-color: #38bdf8;
+}
+
+.week-day:has(input:disabled) {
+  background: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+

@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Sarabun:wght@400;600&display=swap');
+
+:root {
+  --primary: #575757;
+  --primary-light: #e8f5e9;
+  --secondary: #64748b;
+  --danger: #ef4444;
+  --green: #2E924C;
+  --blue: #1D4ED8;
+  --bg: #f8fafc;
+  --card-bg: #ffffff;
+  --border: #e2e8f0;
+  --cell-height: 185px;
+
+  --student: #7c3aed;
+  --student-bg: #f3e8ff;
+
+  --admin: #db2777;
+  --admin-bg: #fde2f3;
+
+  --action: #9ca3af;
+  --action-bg: #f3f4f6;
+}

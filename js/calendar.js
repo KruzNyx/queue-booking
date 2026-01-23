@@ -32,6 +32,7 @@ async function toggleDay(dateStr, isClosed) {
 }
 
 function renderCalendar() {
+  console.log("renderCalendar called");
   const y = currentViewDate.getFullYear();
   const m = currentViewDate.getMonth();
 
@@ -48,7 +49,8 @@ function renderCalendar() {
   html += `</tr></thead><tbody><tr>`;
 
   // ช่องว่างก่อนวันแรก (วันของเดือนก่อนหน้า)
-  for (let i=0;i<firstDay;i++) html += `<td></td>`;
+  for (let i=0;i<firstDay;i++) html += `<td class="is-out-month"></td>`;
+  
 
   for (let d=1; d<=totalDays; d++) {
     const dateStr = `${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
@@ -56,7 +58,8 @@ function renderCalendar() {
     const students = groupByStudent(dayBookings);
 
     const isFullDay = isDayFullyBooked(dateStr);
-    const isClosed  = lockedDays[dateStr] === true;
+    const isClosed = isDateLocked(dateStr);
+
 
 let isOutOfWeek = false;
 let isInWeek = false;
@@ -117,12 +120,12 @@ html += `
   ${isWeekend(dateStr) ? "weekend" : ""}
   ${isInWeek ? "is-in-week" : ""}
   ${isOutOfWeek ? "is-out-week" : ""}
-  ${!isAdmin && isClosed ? "is-locked" : ""}
+  ${isClosed ? "is-locked" : ""}
   ${!isAdmin && !isClosed && isFullDay ? "is-full" : ""}
 "
 
 
-${canClick ? `onclick="openAddModal('${dateStr}')"` : ""}
+${canClick ? `onclick="openAddModal('${dateStr}')"` : ""}>
 
   <div class="date-row">
     <span class="date-num">${d}</span>
@@ -142,10 +145,6 @@ ${canClick ? `onclick="openAddModal('${dateStr}')"` : ""}
 
   calendarEl.innerHTML = html + `</tr></tbody>`;
 }
-
-f
-
-
 
 // ปุ่มเปลี่ยนวัน ซ็าย ขวา
 function changeMonth(step){

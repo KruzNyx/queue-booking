@@ -1,0 +1,91 @@
+.mini-btn {
+  margin: 0;
+  padding: 4px 10px;
+
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+
+  border-radius: 20px;
+  border: 1.5px solid var(--action);
+
+  background-color: var(--action-bg);
+  color: #4b5563;
+
+  cursor: pointer;
+  white-space: nowrap;
+
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.mini-btn:hover {
+  background-color: #e5e7eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+}
+
+.mini-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+#adminTitle {
+  text-align: center;
+  color: #64748b;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+}
+
+#adminBody {
+  text-align: left;
+  margin-bottom: 12px;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+
+
+.nickname-row .mini-btn {
+  flex-shrink: 0;
+}
+
+.date-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.date-num {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #475569;
+}
+
+td.weekend {background: #f1f5f9; }
+
+/* ปุ่มปิดการจอง */
+.mini-btn.btn-close-booking {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1.5px solid #ef4444;
+}
+
+.mini-btn.btn-open {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1.5px solid #22c55e;
+}
+
+
+/* hover */
+.mini-btn.btn-close-booking:hover {
+  background: #fecaca;
+}
+
+.mini-btn.btn-open:hover {
+  background: #bbf7d0;
+}

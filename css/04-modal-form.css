@@ -1,0 +1,179 @@
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15,23,42,0.6);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+
+.modal-content {
+  background: white;
+  padding: 32px;
+  max-width: 380px;
+  margin: 40px auto;
+  border-radius: 20px;
+  animation: modalIn 0.3s ease-out;
+  position: relative;
+}
+
+#modalTitle {
+  text-align: center;
+}
+
+#modalDateDisplay {
+  text-align: center;
+  margin-bottom: 12px;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+@keyframes modalIn {
+  from { opacity:0; transform:translateY(10px) }
+  to { opacity:1; transform:translateY(0) }
+}
+
+
+label {
+  display:block;
+  margin-top:14px;
+  font-weight:600;
+  font-size:0.8rem;
+  color: var(--secondary);
+}
+
+input {
+  width: 100%;
+  padding: 10px 14px;
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius:10px;
+  box-sizing:border-box;
+}
+
+input:focus {
+  border-color: var(--primary);
+  outline:none;
+  background:#fff;
+}
+
+input.readonly {
+  background: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+input::placeholder {
+    cursor: not-allowed;
+}
+
+.btn-group { margin-top:24px; display:flex; gap:8px; }
+.action-btn { flex:1; padding:10px; border:none; border-radius:10px; font-weight:600; cursor:pointer; font-size:0.9rem; }
+.btn-save { background:#D4FFD8; color:var(--green); }
+.btn-delete { background:#fee2e2; color:var(--danger); }
+.btn-close {position: absolute;top: 12px;right: 12px;
+            background: #fee2e2; color: var(--danger);
+            padding: 6px 10px; font-size: 0.75rem;
+}
+
+.slot-booked-self {
+  background: #e0f2fe;
+  color: #075985;
+  cursor: not-allowed;
+}
+
+.booking-summary {
+  margin: 12px auto 6px;
+  padding: 8px 14px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  font-size: 0.8rem;
+  font-weight: 600;
+
+  border-radius: 999px;
+  border: 1.5px solid var(--border);
+
+  background: #f8fafc;
+  color: #475569;
+
+  box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+}
+
+/* ตัวเลขที่ใช้ไป */
+.booking-summary .used {
+  font-weight: 700;
+  color: var(--blue);
+}
+
+/* ตัวเลขทั้งหมด */
+.booking-summary .max {
+  font-weight: 600;
+  color: var(--secondary);
+}
+
+/* ใกล้เต็ม (>= 80%) */
+.booking-summary.near-limit {
+  background: #fff7ed;
+  border-color: #fed7aa;
+  color: #9a3412;
+}
+
+.booking-summary.near-limit .used {
+  color: #ea580c;
+}
+
+/* เต็มแล้ว */
+.booking-summary.full {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #991b1b;
+}
+
+.booking-summary.full .used {
+  color: #b91c1c;
+}
+
+/* ซ่อน booking summary จนกว่าจะมี student_id */
+.booking-summary {
+  display: none;
+}
+
+.booking-readonly input,
+.booking-readonly textarea {
+  background: #f3f3f3;
+  color: #666;
+}
+
+.booking-readonly .time-slots input {
+  pointer-events: none;
+}
+
+.booking-readonly label {
+  color: #999;
+}
+.booking-readonly input[type="text"],
+.booking-readonly input[type="number"] {
+  background: #f4f4f4;
+  color: #666;
+}
+
+.booking-readonly .time-slots label {
+  color: #aaa;
+}
+
+input.readonly {
+  background: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.action-btn.disabled {
+  background: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}

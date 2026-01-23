@@ -49,25 +49,6 @@ function formatNumberWithComma(value) {
   return decimal !== undefined ? `${integer}.${decimal}` : integer;
 }
 
-// check if it all booked
-// function isDayFullyBooked(dateStr){
-//   const dayBookings = allBookings.filter(b => b.work_date === dateStr);
-//   const countMap = {};
-
-//   dayBookings.forEach(b=>{
-//     countMap[b.time_slot] = (countMap[b.time_slot] || 0) + 1;
-//   });
-
-//   const allSlots = [
-//     "8.30-9.30","9.30-10.30","10.30-11.30","11.30-12.30",
-//     "13.00-14.00","14.00-15.00","15.00-16.00","16.00-17.00"
-//   ];
-
-//   return allSlots.every(
-//     slot => (countMap[slot] || 0) >= MAX_PER_SLOT
-//   );
-// }
-
 
 function isDayFullyBooked(dateStr){
   const countMap = {};
@@ -99,20 +80,152 @@ function getWeekRange(dateStr){
   return { start: fmt(monday), end: fmt(friday) };
 }
 
-function getWeeklyBookedHours(studentId, dateStr){
-  const { start, end } = getWeekRange(dateStr);
-
+function getWeeklyBookedHours(studentId, date){
+  const { start, end } = getWeekRange(date);
   return allBookings.filter(b =>
     b.student_id === studentId &&
     b.work_date >= start &&
     b.work_date <= end
-  ).length; // 1 slot = 1 ชั่วโมง
+  ).length;
+}
+
+function getCurrentEditingSlots(studentId, date){
+  return allBookings.filter(
+    b => b.student_id === studentId && b.work_date === date
+  ).length;
 }
 
 
 function getAllowedHours(amount){
   const rule = WEEKLY_HOUR_RULES.find(r =>
-    amount >= r.min && amount <= r.max
+    amount >= r.min && (r.max === undefined || amount <= r.max)
   );
   return rule ? rule.maxHours : 0;
+}
+
+
+
+// 🔒 default lock rule
+function isDateLocked(dateStr) {
+  // admin เคยตั้งค่าไว้ → ใช้ค่านั้น
+  if (lockedDays[dateStr] !== undefined) {
+    return lockedDays[dateStr] === true;
+  }
+
+  // ❗ ถ้าไม่มี record → weekend = ปิด
+  return isWeekend(dateStr);
+}
+
+// function updateBookingSummary(studentId, date) {
+//   const summary = document.getElementById("bookingSummary");
+//   if (!summary) return;
+
+//   // ❌ ยังไม่พร้อม → ซ่อน
+//   if (!studentId || !date) {
+//     summary.style.display = "none";
+//     return;
+//   }
+
+//   const used = getWeeklyBookedHours(studentId, date);
+//   const amount = Number(elAmount.value.replace(/,/g, "")) || 0;
+//   const max = getAllowedHours(amount);
+
+//   document.getElementById("usedHours").textContent = used;
+//   document.getElementById("maxHours").textContent = max;
+
+//   summary.style.display = "inline-flex";
+
+//   // reset state
+//   summary.classList.remove("near-limit", "full");
+
+//   if (max > 0) {
+//     const ratio = used / max;
+//     if (ratio >= 1) {
+//       summary.classList.add("full");
+//     } else if (ratio >= 0.8) {
+//       summary.classList.add("near-limit");
+//     }
+//   }
+// }
+
+function updateBookingSummary(studentId, date) {
+  const summary = document.getElementById("bookingSummary");
+  if (!summary) return;
+
+  // reset
+  if (!studentId || !date) {
+    summary.style.display = "none";
+    setWeeklyFullUI(false);
+    return;
+  }
+
+  const used = getWeeklyBookedHours(studentId, date);
+  const amount = Number(elAmount.value.replace(/,/g, "")) || 0;
+  const max = getAllowedHours(amount);
+
+  document.getElementById("usedHours").textContent = used;
+  document.getElementById("maxHours").textContent = max;
+
+  summary.style.display = "inline-flex";
+  summary.classList.remove("near-limit", "full");
+
+  if (max > 0) {
+    const ratio = used / max;
+
+    if (ratio >= 1 && !isAdmin) {
+      summary.classList.add("full");
+      setWeeklyFullUI(true);
+      return;
+    }
+
+    if (ratio >= 0.8) {
+      summary.classList.add("near-limit");
+    }
+  }
+
+  setWeeklyFullUI(false);
+}
+
+
+
+function openBookingModal(date) {
+  currentModalDate = date;
+
+  // reset
+  elStudentId.value = "";
+  elFullName.value = "";
+  elNickname.value = "";
+  elAmount.value = "";
+  document.getElementById("booking_id").value = "";
+
+  updateBookingSummary("", null); // ซ่อนก่อน
+
+  document.getElementById("bookingModal").style.display = "block";
+}
+
+
+function setWeeklyFullUI(isFull) {
+  const saveBtn = document.getElementById("saveBtn");
+
+  // time slots
+  document.querySelectorAll(".time-slots input").forEach(i => {
+    i.disabled = isFull;
+  });
+
+  // text inputs
+  [elFullName, elNickname, elAmount].forEach(el => {
+    el.readOnly = isFull;
+    el.classList.toggle("readonly", isFull);
+  });
+
+  // save button
+  if (isFull) {
+    saveBtn.disabled = true;
+    saveBtn.textContent = "ชั่วโมงทำงานสัปดาห์นี้เต็มแล้ว";
+    saveBtn.classList.add("disabled");
+  } else {
+    saveBtn.disabled = false;
+    saveBtn.textContent = "บันทึก";
+    saveBtn.classList.remove("disabled");
+  }
 }

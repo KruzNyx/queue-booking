@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Queue Booking System</title>
 <link rel="stylesheet" href="css/index.css">
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -29,11 +30,22 @@
   <div class="modal-content">
     <h3 id="modalTitle"></h3>
     <p id="modalDateDisplay"></p>
+<div id="readonlyNotice" class="info" style="display:none;">
+  🔒 คิวนี้สร้างโดยแอดมิน
+</div>
 
-    <input type="hidden" id="booking_id">
+      <div class="booking-summary" id="bookingSummary">
+        คุณจองไปแล้ว
+        <span class="used" id="usedHours">3</span> /
+        <span class="max" id="maxHours">6</span>
+        ชั่วโมง
+      </div>
 
     <label>รหัสนักศึกษา</label>
     <input id="student_id">
+
+    <small id="weeklyInfo" class="info"></small>
+
 
     <label>ชื่อ–นามสกุล</label>
     <input id="full_name">
@@ -44,8 +56,9 @@
     <label>จำนวนเงิน</label>
     <input id="amount">
 
-    <label>เลือกวัน (สำหรับจองหลายวัน)</label>
-    <div id="weekDaySelector" class="week-selector"></div>
+<label id="weekDayLabel">เลือกวัน (สำหรับจองหลายวัน)</label>
+<div id="weekDaySelector" class="week-selector"></div>
+
 
     <label>ช่วงเวลา</label>
     <div class="time-slots">

@@ -1,0 +1,157 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+th {
+  padding: 12px;
+  color: var(--secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+td {
+  border: 1px solid var(--border);
+  height: var(--cell-height);
+  max-height: var(--cell-height);
+  vertical-align: top;
+  padding: 10px;
+  position: relative;
+  background: white;
+  overflow: hidden;
+  transition: background 0.1s;
+}
+
+td:hover { background: #fafafa; cursor: pointer; }
+
+td.today { background: #f4fdff; }
+td.today::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid #dadada;
+  pointer-events: none;
+}
+
+/* locked */
+td.is-locked { background: #f1f5f9; }
+td.is-locked:not([onclick]) { cursor: not-allowed; }
+
+td.is-locked:hover { background: #f1f5f9; cursor: not-allowed; }
+td.is-locked[onclick],
+td.is-locked[onclick]:hover { cursor: pointer; }
+
+td.is-full { background-color: #ffa4a4; cursor: default; }
+td.is-out-week {
+  opacity: 0.35;
+  background: #f1f5f9;
+  cursor: not-allowed;
+}
+td.weekend { background: #f1f5f9; }
+
+/* วันนอกเดือน (leading days) */
+td.is-out-month {
+  background: #f1f5f9;
+  cursor: not-allowed;
+}
+
+.date-num {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #475569;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.nickname-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 4px;
+
+  height: calc(var(--cell-height) - 18px); /* เดิม -24 */
+  padding-top: 1px;  
+  overflow-y: auto;
+  overflow-x: hidden;  /* กัน scroll แนวนอน */
+  align-content: flex-start;
+  position: relative;  
+}
+
+.nickname-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+
+.calendar-day { min-height: 6rem; }
+
+
+.badge {
+    width: fit-content;
+    font-size: 0.72rem;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    box-sizing: border-box;
+    box-shadow: 5px 3px 8px #9c9c9c;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.badge.student {
+  background-color: #f3e8ff;
+  color: #7c3aed;
+  border: 1.5px solid #7c3aed;
+}
+
+.badge.admin {
+  background-color: #fde2f3;
+  color: #db2777;
+  border: 1.5px solid #db2777;
+}
+
+
+.badge:hover {
+    transform: translateY(-1px) scale(1.02); /* เล็กลง ลดการล้น */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+td.is-full { background-color: #fff3f8; cursor: default; }
+.status-full {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 0.7rem; /* 0.6 */
+  font-weight: 700;
+  padding: 4px 8px;  /* 2px 6px */
+  border-radius: 999px;
+  background-color: #fee2e2;
+  border: 1.5px solid #b91c1c;
+  color: #b91c1c;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.status-locked {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  background: #e5e7eb;
+  color: #374151;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+
+td.is-locked[onclick],
+td.is-locked[onclick]:hover {
+  cursor: pointer;
+}
+
+

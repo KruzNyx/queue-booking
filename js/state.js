@@ -8,6 +8,10 @@ let editingRole = "student";
 let selectedDates = [];
 let selectedWeekRange = null;
 
+let isEditMode = false;
+
+let isReadonlyMode = false;
+
 
 // element
 const calendarEl = document.getElementById("calendar");

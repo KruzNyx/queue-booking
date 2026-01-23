@@ -7,10 +7,25 @@ window.onload = async () => {
   renderCalendar();
 };
 
-elAmount.addEventListener("input",()=>{
+// amount
+elAmount.addEventListener("input", () => {
   elAmount.value = formatNumberWithComma(elAmount.value);
+  updateBookingSummary(elStudentId.value.trim(), currentModalDate);
 });
 
-elStudentId.addEventListener("input",()=>{
-  elStudentId.value = elStudentId.value.replace(/\D/g,"").slice(0,9);
+// student id (พิมพ์)
+elStudentId.addEventListener("input", () => {
+  elStudentId.value = elStudentId.value.replace(/\D/g, "").slice(0, 9);
+  updateBookingSummary(elStudentId.value.trim(), currentModalDate);
 });
+
+// student id (ออกจากช่อง)
+elStudentId.addEventListener("blur", () => {
+  if (!elStudentId.value || !currentModalDate) return;
+
+  updateStudentWeeklyStatus(elStudentId.value, currentModalDate);
+  handleStudentAddBookingRule(elStudentId.value, currentModalDate); // ⭐ สำคัญมาก
+  updateBookingSummary(elStudentId.value.trim(), currentModalDate);
+});
+
+

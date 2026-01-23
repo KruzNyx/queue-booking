@@ -1,0 +1,16 @@
+@media (max-width: 1024px) {
+  .container { max-width: 95%; padding: 24px; }
+  .calendar-day { min-height: 5rem; font-size: 0.85rem; }
+}
+
+@media (max-width: 768px) {
+  body { padding: 24px 12px; }
+  table { display: block; overflow-x: auto; }
+  th, td { min-width: 120px; }
+  :root { --cell-height: 150px; }
+}
+
+@media (max-width: 480px) {
+  :root { --cell-height: 135px; }
+  .time-slots { grid-template-columns: 1fr; }
+}
