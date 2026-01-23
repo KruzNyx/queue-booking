@@ -1,4 +1,8 @@
 window.onload = async () => {
+  await restoreAdminSession();
+
+
+  
   currentViewDate = new Date(ALLOWED_YEAR, ALLOWED_MONTHS[0], 1);
   initMonthSlicer();
   initYearSlicer();
