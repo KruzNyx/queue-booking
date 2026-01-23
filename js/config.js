@@ -3,31 +3,36 @@ const SB_KEY = "sb_publishable_S1_LURvzKRzM_JgC4-x2vg_6L_XAN0X";
 const sb = supabase.createClient(SB_URL, SB_KEY);
 
 const ALLOWED_YEAR = 2026;
-const ALLOWED_MONTHS = [0, 1];  // 0= มกรา 11=ธันวา
+const ALLOWED_MONTHS = [0, 1];  // 0 = มกรา
 const MAX_PER_SLOT = 3;
 
-// const isAdmin =
-//   new URLSearchParams(window.location.search).get("kaiwan") === "adminroleja";
-let isAdmin = false;
-async function adminLogin(username, password) {
-  const { data, error } = await sb
-    .from("admin_users")
-    .select("id, username")
-    .eq("username", username)
-    .eq("password", password)
-    .single();
+const sbAdmin = supabase.createClient(SB_URL, SB_KEY, {
+  global: {
+    headers: { "x-admin": "true" }
+  }
+});
 
-  if (error || !data) {
+// ADMIN STATE
+let isAdmin = false;
+
+// ADMIN LOGIN
+async function adminLogin(username, password) {
+  const { data, error } = await sb.rpc("admin_login", {
+    p_username: username,
+    p_password: password
+  });
+
+  if (error || data !== true) {
     isAdmin = false;
     return false;
   }
 
-  // จำสถานะแอดมินไว้
   localStorage.setItem("admin_user", username);
   isAdmin = true;
   return true;
 }
 
+// RESTORE ADMIN SESSION
 async function restoreAdminSession() {
   const username = localStorage.getItem("admin_user");
   if (!username) {
@@ -35,16 +40,14 @@ async function restoreAdminSession() {
     return;
   }
 
-  const { data } = await sb
-    .from("admin_users")
-    .select("username")
-    .eq("username", username)
-    .single();
+  const { data } = await sb.rpc("is_admin", {
+    p_username: username
+  });
 
-  isAdmin = !!data;
+  isAdmin = data === true;
 }
 
-
+// WEEKLY RULES
 const WEEKLY_HOUR_RULES = [
   { min: 8000,  max: 14999, maxHours: 3 },
   { min: 15000, max: 19999, maxHours: 3 },
@@ -53,5 +56,4 @@ const WEEKLY_HOUR_RULES = [
   { min: 32000, max: 39999, maxHours: 5 },
   { min: 40000, max: 49999, maxHours: 5 },
   { min: 50000, maxHours: 6 },
-
 ];

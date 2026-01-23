@@ -1,16 +1,20 @@
-async function adminDeleteBooking(studentId, date, slot){
+async function adminDeleteBooking(studentId, date, slot) {
+  if (!isAdmin) return;
+
   if (!confirm("ยืนยันยกเลิกคิวนี้?")) return;
 
-  await sb.from("queue_booking")
+  await sbAdmin
+    .from("queue_booking")
     .delete()
     .eq("student_id", studentId)
     .eq("work_date", date)
     .eq("time_slot", slot);
 
   await loadBookings();
-  openAdminDayView(date); // refresh modal
+  openAdminDayView(date);
   renderCalendar();
 }
+
 
 
 function openAdminDayView(date){

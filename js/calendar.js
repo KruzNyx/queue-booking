@@ -24,12 +24,27 @@ async function loadLockedDays(){
 }
 
 // เปิด-ปิดวัน
+// async function toggleDay(dateStr, isClosed) {
+//   await sb.from("booking_day_lock")
+//     .upsert({ work_date: dateStr, is_locked: !isClosed }, { onConflict: "work_date" });
+//   await loadLockedDays();
+//   renderCalendar();
+// }
 async function toggleDay(dateStr, isClosed) {
-  await sb.from("booking_day_lock")
-    .upsert({ work_date: dateStr, is_locked: !isClosed }, { onConflict: "work_date" });
+  if (!isAdmin) return;
+
+  await sbAdmin
+    .from("booking_day_lock")
+    .upsert(
+      { work_date: dateStr, is_locked: !isClosed },
+      { onConflict: "work_date" }
+    );
+
   await loadLockedDays();
   renderCalendar();
 }
+
+
 
 function renderCalendar() {
   console.log("renderCalendar called");

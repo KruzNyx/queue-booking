@@ -37,12 +37,23 @@ async function saveBooking(){
   for (const d of selectedDates) {
 
     // edit → ลบของตัวเองก่อน
-    if (isEditMode) {
-      await sb.from("queue_booking")
-        .delete()
-        .eq("student_id", elStudentId.value)
-        .eq("work_date", d);
-    }
+    // if (isEditMode) {
+    //   await sb.from("queue_booking")
+    //     .delete()
+    //     .eq("student_id", elStudentId.value)
+    //     .eq("work_date", d);
+    // }
+
+  const client = isAdmin ? sbAdmin : sb;
+
+if (isEditMode) {
+  await client
+    .from("queue_booking")
+    .delete()
+    .eq("student_id", elStudentId.value)
+    .eq("work_date", d);
+}
+
 
     const { data, error } = await sb.rpc("book_queue", {
       p_date: d,
