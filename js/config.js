@@ -27,14 +27,14 @@ async function adminLogin(username, password) {
     return false;
   }
 
-  localStorage.setItem("admin_user", username);
+  sessionStorage.setItem("admin_user", username);
   isAdmin = true;
   return true;
 }
 
 // RESTORE ADMIN SESSION
 async function restoreAdminSession() {
-  const username = localStorage.getItem("admin_user");
+  const username = sessionStorage.getItem("admin_user");
   if (!username) {
     isAdmin = false;
     return;
@@ -49,11 +49,11 @@ async function restoreAdminSession() {
 
 // WEEKLY RULES
 const WEEKLY_HOUR_RULES = [
-  { min: 8000,  max: 14999, maxHours: 3 },
-  { min: 15000, max: 19999, maxHours: 3 },
-  { min: 20000, max: 24999, maxHours: 4 },
-  { min: 25000, max: 31999, maxHours: 4 },
-  { min: 32000, max: 39999, maxHours: 5 },
-  { min: 40000, max: 49999, maxHours: 5 },
-  { min: 50000, maxHours: 6 },
+  { min: 0,      max: 14999, maxHours: 3 },
+  { min: 15000,  max: 19999, maxHours: 3 },
+  { min: 20000,  max: 24999, maxHours: 4 },
+  { min: 25000,  max: 31999, maxHours: 4 },
+  { min: 32000,  max: 39999, maxHours: 5 },
+  { min: 40000,  max: 49999, maxHours: 5 },
+  { min: 50000,               maxHours: 6 },
 ];
