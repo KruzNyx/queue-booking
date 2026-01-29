@@ -1,0 +1,2 @@
+admin page
+await adminLogin("kewalin", "qpalzm0011")
