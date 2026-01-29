@@ -55,5 +55,5 @@ const WEEKLY_HOUR_RULES = [
   { min: 25000,  max: 31999, maxHours: 4 },
   { min: 32000,  max: 39999, maxHours: 5 },
   { min: 40000,  max: 49999, maxHours: 5 },
-  { min: 50000,               maxHours: 6 },
+  { min: 50000,  maxHours: 6 },
 ];
