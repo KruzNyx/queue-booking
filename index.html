@@ -3,13 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>.</title>
-
-<meta name="description" content=" ">
-<meta property="og:title" content=" ">
-<meta property="og:description" content=" ">
-<meta property="og:type" content="website">
-
+<title>Queue Booking System</title>
 <link rel="stylesheet" href="css/index.css">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -17,7 +11,7 @@
 <body>
 
 <div class="container">
-  <h2 style="display: none;">ระบบจองคิวทำงาน</h2>
+  <h2>🗓️ ระบบจองคิวทำงาน</h2>
 
   <div class="calendar-header">
     <button class="btn-nav" onclick="changeMonth(-1)">‹</button>
@@ -31,6 +25,7 @@
   <table id="calendar"></table>
 </div>
 
+<!-- Booking Modal -->
 <div id="modal" class="modal">
   <div class="modal-content">
     <h3 id="modalTitle"></h3>
@@ -40,9 +35,9 @@
 </div>
 
       <div class="booking-summary" id="bookingSummary">
-        คุณจองไปแล้ว 
-        <span class="used" id="usedHours">3</span> / 
-        <span class="max" id="maxHours">6</span> 
+        คุณจองไปแล้ว
+        <span class="used" id="usedHours">3</span> /
+        <span class="max" id="maxHours">6</span>
         ชั่วโมง
       </div>
 
@@ -86,6 +81,7 @@
   </div>
 </div>
 
+<!-- admin -->
 <div id="adminModal" class="modal">
   <div class="modal-content">
     <h3 id="adminTitle"></h3>
@@ -94,6 +90,7 @@
   </div>
 </div>
 
+<!-- ต่อ js -->
 <script src="js/config.js"></script>
 <script src="js/state.js"></script>
 <script src="js/utils.js"></script>
