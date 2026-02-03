@@ -8,6 +8,30 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
+
+<div style="text-align: right; margin: 10px;">
+  <button id="adminLoginBtn" onclick="document.getElementById('loginModal').style.display='block'" class="mini-btn">
+    Admin Login
+  </button>
+  
+  <button id="adminLogoutBtn" onclick="handleLogout()" class="mini-btn danger" style="display: none;">
+    Logout (Admin)
+  </button>
+</div>
+
+<div id="loginModal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <h3>เข้าสู่ระบบแอดมิน</h3>
+    <input type="text" id="adminUser" placeholder="Username" class="form-control">
+    <input type="password" id="adminPass" placeholder="Password" class="form-control">
+    
+    <div class="admin-login-footer">
+      <button onclick="document.getElementById('loginModal').style.display='none'" class="btn-admin-cancel">ยกเลิก</button>
+      <button onclick="handleLogin()" class="btn-admin-confirm">ตกลง</button>
+    </div>
+  </div>
+</div>
+
 <body>
 
 <div class="container">

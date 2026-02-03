@@ -112,6 +112,16 @@ function isDateLocked(dateStr) {
     return lockedDays[dateStr] === true;
   }
 
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  const targetDate = new Date(dateStr);
+  targetDate.setHours(0, 0, 0, 0);
+
+  if (targetDate < today) {
+    return true; // ปิดอัตโนมัติเพราะผ่านมาแล้ว
+  }
+
   // ❗ ถ้าไม่มี record → weekend = ปิด
   return isWeekend(dateStr);
 }

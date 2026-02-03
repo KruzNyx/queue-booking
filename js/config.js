@@ -3,7 +3,7 @@ const SB_KEY = "sb_publishable_S1_LURvzKRzM_JgC4-x2vg_6L_XAN0X";
 const sb = supabase.createClient(SB_URL, SB_KEY);
 
 const ALLOWED_YEAR = 2026;
-const ALLOWED_MONTHS = [0, 1];  // 0 = มกรา
+const ALLOWED_MONTHS = [ 1];  // 0 = มกรา
 const MAX_PER_SLOT = 3;
 
 const sbAdmin = supabase.createClient(SB_URL, SB_KEY, {
@@ -57,3 +57,13 @@ const WEEKLY_HOUR_RULES = [
   { min: 40000,  max: 49999, maxHours: 5 },
   { min: 50000,  maxHours: 6 },
 ];
+
+
+function handleLogout() {
+  if (confirm("ยืนยันการออกจากระบบแอดมิน?")) {
+    sessionStorage.removeItem("admin_user");
+    isAdmin = false;
+    // alert("ออกจากระบบแล้ว");
+    location.reload();
+  }
+}

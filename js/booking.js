@@ -91,19 +91,27 @@ async function deleteBooking(){
 
   if (!confirm("ยกเลิกการจองของนศคนนี้?")) return;
 
-  const { error } = await sb
+  // เลือก Client ตามสิทธิ์ (สำคัญมาก: sbAdmin จะส่ง x-admin header ไปให้ Policy ข้อ 2 ทำงาน)
+  const client = isAdmin ? sbAdmin : sb;
+
+  const slotsToDelete = (editingSlots && editingSlots.length > 0) 
+    ? editingSlots 
+    : getSelectedTimeSlots();
+
+  const { error } = await client
     .from("queue_booking")
     .delete()
-    .eq("student_id", elStudentId.value)
+    .eq("student_id", elStudentId.value) // ระบุรหัส นศ. เพื่อความปลอดภัย
     .eq("work_date", currentModalDate)
-    .in("time_slot", editingSlots);
+    .in("time_slot", slotsToDelete);
 
   if (error) {
     console.error(error);
-    alert("ลบไม่สำเร็จ");
+    alert("ลบไม่สำเร็จ: " + error.message);
     return;
   }
 
+  alert("ยกเลิกการจองเรียบร้อยแล้ว");
   closeModal();
   await loadBookings();
   renderCalendar();
