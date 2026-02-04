@@ -84,8 +84,12 @@ updateBookingSummary("", null);
 }
 
 async function deleteBooking(){
-  if (isReadonlyMode) {
-    alert("นศไม่มีสิทธิ์ลบการจองนี้");
+  // if (isReadonlyMode) {
+  //   alert("นศไม่มีสิทธิ์ลบการจองนี้");
+  //   return;
+  // }
+  if (!isAdmin) {
+    alert("นศไม่สามารถลบการจองได้ หากอยากยกเลิกการจองติดต่อพี่แอนหรือพี่ไข่หวานค่ะ");
     return;
   }
 

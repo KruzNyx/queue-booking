@@ -60,4 +60,3 @@ elStudentId.addEventListener("blur", () => {
   handleStudentAddBookingRule(elStudentId.value, currentModalDate); // ⭐ สำคัญมาก
   updateBookingSummary(elStudentId.value.trim(), currentModalDate);
 });
-
