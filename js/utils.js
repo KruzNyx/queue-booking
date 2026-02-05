@@ -13,6 +13,7 @@ function groupByStudent(list) {
         full_name: b.full_name,
         nickname: b.nickname,
         role: b.role,
+        is_noshow: b.is_noshow,
         slots: []
       };
     }

@@ -89,3 +89,133 @@ td.weekend {background: #f1f5f9; }
 .mini-btn.btn-open:hover {
   background: #bbf7d0;
 }
+
+/* สไตล์สำหรับ Badge ของคนที่โดนหมายหัว (No-Show) */
+.badge.badge-noshow {
+  background-color: #e2e8f0 !important; /* เปลี่ยนเป็นสีเทาอ่อน */
+  color: #94a3b8 !important;            /* ข้อความสีจางลง */
+  text-decoration: line-through;       /* ขีดฆ่าชื่อ */
+  opacity: 0.7;                         /* ทำให้ดูโปร่งแสง */
+  border: 1px dashed #cbd5e1;           /* เส้นขอบประเพิ่มความต่าง */
+  cursor: default;
+}
+
+/* เอฟเฟกต์เมื่อแอดมินเปิด "โหมดหมายหัว" บนปฏิทิน */
+.btn-active {
+  background-color: #ef4444 !important; /* สีแดงสว่างเพื่อให้รู้ว่าโหมดทำงานอยู่ */
+  color: white !important;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+  animation: pulse 1.5s infinite;       /* เพิ่มแอนิเมชันกะพริบเบาๆ */
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* --- ส่วนปฏิทิน (Badge) --- */
+.badge.badge-noshow {
+    background-color: #f1f5f9 !important; /* สีเทาอ่อนมาก */
+    color: #94a3b8 !important;            /* ตัวอักษรเทาจาง */
+    border: 1px solid #e2e8f0 !important;
+    text-decoration: line-through;        /* ขีดฆ่าชื่อ */
+    opacity: 0.8;
+}
+/* ขีดฆ่าชื่อ  */
+.noshow-text {
+    text-decoration: line-through;
+    color: #94a3b8;
+    font-style: italic;
+}
+
+
+
+/* จัดแถวในรายการแอดมิน */
+.admin-li {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* วางชิดซ้ายต่อจากชื่อ */
+    gap: 8px;
+    padding: 4px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+/* ชื่อเล่นนศ. */
+.student-name {
+    min-width: 60px; /* กันชื่อสั้นยาวทำให้ปุ่มขยับไปมา */
+    font-weight: 500;
+}
+
+/* กลุ่มปุ่มแบบ Inline */
+.admin-inline-btns {
+    display: flex;
+    gap: 4px;
+}
+
+/* ปุ่มขนาดจิ๋ว (Micro) */
+.micro-btn {
+    padding: 2px 8px;
+    font-size: 11px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid #e2e8f0;
+    background: white;
+    transition: all 0.2s;
+    line-height: 1.2;
+}
+
+/* --- ส่วนของปุ่มหมายหัว (Toggle) --- */
+
+/* สถานะปกติ (ยังไม่ได้หมายหัว) */
+.btn-noshow {
+    color: #94a3b8;           /* เทาอ่อน */
+    border-color: #e2e8f0;
+}
+
+/* สถานะถูกหมายหัวแล้ว (Active) */
+.btn-noshow.active {
+    background-color: #f1f5f9 !important; /* เทาจางๆ */
+    color: #475569 !important;            /* เทาเข้มขึ้น */
+    border-color: #cbd5e1 !important;
+}
+
+/* --- ส่วนของปุ่มยกเลิก (Danger เดิม) --- */
+
+/* ก่อนกด - เทาเรียบๆ */
+.micro-btn.danger {
+    color: #629ff3;
+    border-color: #336fbd;
+    background-color: transparent;
+}
+
+/* เมื่อเอาเมาส์ชี้ - เทาที่เข้มกว่าเดิมเล็กน้อย */
+.micro-btn.danger:hover {
+    color: #64748b;
+    border-color: #cbd5e1;
+    background-color: #f8fafc;
+}
+
+/* --- การแสดงผลชื่อ (หัวใจหลัก) --- */
+.noshow-item .student-name {
+    text-decoration: line-through;
+    color: #cbd5e1 !important; /* ขีดฆ่าทิ้งด้วยสีเทาจาง */
+}
+
+
+/* ปุ่มหมายหัว (ปกติ) */
+.mini-btn.btn-noshow-toggle {
+  background-color: #dbdbdb;
+  color: #464646;
+  border: 1.5px solid #525b68;
+}
+
+.mini-btn.btn-noshow-toggle:hover {
+  background-color: #e2e8f0;
+}
+
+.mini-btn.btn-noshow-toggle.active {
+  background-color: #747474 !important;
+  color: #f8fafc !important;
+  border: 1.5px solid #525b68;
+}

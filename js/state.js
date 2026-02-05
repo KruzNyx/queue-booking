@@ -11,7 +11,7 @@ let selectedWeekRange = null;
 let isEditMode = false;
 
 let isReadonlyMode = false;
-
+let isMarkNoShowMode = false;
 
 // element
 const calendarEl = document.getElementById("calendar");

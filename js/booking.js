@@ -124,7 +124,8 @@ async function deleteBooking(){
 function updateTimeSlotAvailability(date){
   const countMap = {};
   allBookings
-    .filter(b => b.work_date === date)
+    // .filter(b => b.work_date === date)
+.filter(b => b.work_date === date && b.is_noshow !== true)
     .forEach(b => {
       countMap[b.time_slot] = (countMap[b.time_slot] || 0) + 1;
     });

@@ -155,3 +155,18 @@ td.is-locked[onclick]:hover {
 }
 
 
+.admin-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+  max-width: 100%;
+}
+
+.admin-btns .mini-btn {
+  font-size: 0.65rem;
+  padding: 4px 6px;
+  max-width: 100%;
+  white-space: nowrap;
+}
+

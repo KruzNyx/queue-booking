@@ -39,13 +39,18 @@ function openAdminDayView(date){
       <div><strong>${slot}</strong>
         <ul>
           ${grouped[slot].map(b => `
-  <li>
-    ${b.nickname}
-    <button class="mini-btn danger"
+<li class="admin-li ${b.is_noshow ? 'noshow-item' : ''}">
+  <span class="student-name">${b.nickname}</span>
+  
+  <div class="admin-inline-btns">
+
+
+    <button class="micro-btn danger"
       onclick="adminDeleteBooking('${b.student_id}','${date}','${slot}')">
       ยกเลิก
     </button>
-  </li>
+  </div>
+</li>
 `).join("")}
 
         </ul>
@@ -54,8 +59,59 @@ function openAdminDayView(date){
 
 
   document.getElementById("adminTitle").textContent =
-    "📆 วันที่ "+formatThaiDateAD(date);
+    formatThaiDateAD(date);
   document.getElementById("adminBody").innerHTML = html || "<p>ไม่มีข้อมูล</p>";
   adminModal.style.display="block";
 }
 function closeAdminModal(){ adminModal.style.display="none"; }
+
+
+async function adminMarkNoShow(bookingId){
+  const { data, error } = await sbAdmin
+    .from("queue_booking")
+    .update({ is_noshow: true })
+    .eq("id", bookingId)
+    .select();
+
+  console.log("update data:", data);
+  console.log("update error:", error);
+
+  await loadBookings();
+  openAdminDayView(currentModalDate);
+}
+
+function toggleNoShowMode() {
+  isMarkNoShowMode = !isMarkNoShowMode;
+  renderCalendar();
+}
+
+async function toggleNoShow(studentId, dateStr) {
+  if (!isAdmin) return;
+
+  // เอา booking ทุก slot ของนศในวันนั้น
+  const bookings = allBookings.filter(b =>
+    b.student_id === studentId &&
+    b.work_date === dateStr
+  );
+
+  if (!bookings.length) return;
+
+  // ถ้ายังมีอันไหนไม่ noshow → กดแล้วให้เป็น noshow ทั้งหมด
+  const shouldMarkNoShow =
+    !bookings.every(b => b.is_noshow === true);
+
+  const { error } = await sbAdmin
+    .from("queue_booking")
+    .update({ is_noshow: shouldMarkNoShow })
+    .eq("student_id", studentId)
+    .eq("work_date", dateStr);
+
+  if (error) {
+    console.error(error);
+    alert("เปลี่ยนสถานะ no-show ไม่สำเร็จ");
+    return;
+  }
+
+  await loadBookings();
+  renderCalendar();
+}

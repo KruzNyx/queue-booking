@@ -94,8 +94,17 @@ if (!isAdmin && selectedWeekRange) {
     let badges = "";
     students.forEach(s=>{
 
-badges += `<span class="badge ${s.role}"
-  onclick="event.stopPropagation(); openEditModal('${s.student_id}','${dateStr}')">
+// badges += `<span class="badge ${s.role}"
+//   onclick="event.stopPropagation(); openEditModal('${s.student_id}','${dateStr}')">
+//   ${s.nickname}
+// </span>`;
+
+badges += `<span class="badge ${s.role} ${s.is_noshow ? "badge-noshow" : ""}"
+  onclick="event.stopPropagation();
+    ${isMarkNoShowMode
+      ? `toggleNoShow('${s.student_id}','${dateStr}')`
+      : `openEditModal('${s.student_id}','${dateStr}')`}
+  ">
   ${s.nickname}
 </span>`;
 
@@ -112,12 +121,23 @@ badges += `<span class="badge ${s.role}"
     let adminBtns = "";
     if (isAdmin) {
       adminBtns = `
-        <button class="mini-btn"
-          onclick="event.stopPropagation(); openAdminDayView('${dateStr}')">ดูรายละเอียด</button>
-        <button class="mini-btn ${isClosed?"btn-open":"btn-close-booking"}"
-          onclick="event.stopPropagation(); toggleDay('${dateStr}',${isClosed})">
-          ${isClosed?"เปิดการจอง":"ปิดการจอง"}
-        </button>`;
+        <div class="admin-btns">
+          <button class="mini-btn"
+            onclick="event.stopPropagation(); openAdminDayView('${dateStr}')">
+            รายละเอียด
+          </button>
+
+          <button class="mini-btn ${isClosed ? "btn-open" : "btn-close-booking"}"
+            onclick="event.stopPropagation(); toggleDay('${dateStr}',${isClosed})">
+            ${isClosed ? "เปิดการจอง" : "ปิดการจอง"}
+          </button>
+
+          <button class="mini-btn btn-noshow-toggle ${isMarkNoShowMode ? "active" : ""}"
+            onclick="event.stopPropagation(); toggleNoShowMode()">
+            ${isMarkNoShowMode ? "ออกโหมดหมายหัว" : "หมายหัว"}
+          </button>
+        </div>
+      `;
     }
 
     // ช่องวัน
