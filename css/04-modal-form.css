@@ -177,3 +177,45 @@ input.readonly {
   color: #9ca3af;
   cursor: not-allowed;
 }
+
+
+.booking-readonly input,
+.booking-readonly textarea {
+  pointer-events: none;
+  background-color: #f3f3f3;
+  color: #666;
+  border-color: #ddd;
+}
+
+/* =========================
+   READONLY INPUT — SOLID LOCK STYLE
+========================= */
+.booking-readonly input,
+.booking-readonly textarea {
+  pointer-events: none;              /* กดไม่ได้ */
+  background: #e5e7eb;               /* สีเทาทึบ แบบ slot ล็อก */
+  color: #6b7280;                    /* เทาเข้ม อ่านได้ */
+  border: 1.5px solid #d1d5db;
+  cursor: not-allowed;
+
+  /* ให้ดู "จม" เหมือน disabled */
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.08);
+}
+
+/* ปิด focus effect */
+.booking-readonly input:focus,
+.booking-readonly textarea:focus {
+  outline: none;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.08);
+}
+
+/* label ดูจางลง */
+.booking-readonly label {
+  color: #9ca3af;
+}
+
+/* placeholder ให้จางลงอีก */
+.booking-readonly input::placeholder {
+  color: #9ca3af;
+}
+
