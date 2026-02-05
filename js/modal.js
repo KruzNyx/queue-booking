@@ -25,6 +25,7 @@ function openAddModal(date) {
   elAmount.value = "";
   updateBookingSummary("", null);
 
+
   editingRole = isAdmin ? "admin" : "student";
   editingSlots = [];
 
@@ -50,9 +51,96 @@ function openAddModal(date) {
   updateTimeSlotAvailability(date);
 }
 
-/* =========================
-   OPEN EDIT MODAL
-========================= */
+
+// function openEditModal(studentId, date) {
+//   isEditMode = true;
+//   currentModalDate = date;
+//   selectedDates = [date];
+// selectedWeekRange = getWeekRange(date);
+
+// document.getElementById("weekDayLabel").style.display = "block";
+// document.getElementById("weekDaySelector").style.display = "flex";
+// renderWeekDaySelector();
+
+//   const records = allBookings.filter(
+//     b => b.student_id === studentId && b.work_date === date
+//   );
+//   if (!records.length) return;
+
+//   modal.style.display = "block";
+//   elModalTitle.textContent = "รายละเอียดการจอง";
+//   elModalDate.textContent = formatThaiDateAD(date);
+  
+
+//   elStudentId.value = records[0].student_id;
+//   elFullName.value = records[0].full_name;
+//   elNickname.value = records[0].nickname;
+//   elAmount.value = formatNumberWithComma(String(records[0].amount || 0));
+
+//   editingRole = records[0].role;
+//   editingSlots = records.map(r => r.time_slot);
+
+//   document.querySelectorAll(".time-slots input").forEach(i => {
+//     i.checked = editingSlots.includes(i.value);
+//   });
+
+//   /* =========================
+//      1. เช็คสิทธิ์เบื้องต้น (โหมดแก้ไขปกติ)
+//   ========================= */
+//   isReadonlyMode = !isAdmin && records[0].role === "admin";
+//   const modalContent = document.querySelector(".modal-content");
+//   const saveBtn = document.getElementById("saveBtn");
+//   const notice = document.getElementById("readonlyNotice");
+
+//   if (isReadonlyMode) {
+//     // กรณีดูของที่แอดมินสร้าง
+//     modalContent.classList.add("booking-readonly");
+//     elFullName.readOnly = true;
+//     elNickname.readOnly = true;
+//     elAmount.readOnly = true;
+//     document.querySelectorAll(".time-slots input").forEach(i => i.disabled = true);
+//     saveBtn.style.display = "none";
+//     delBtn.style.display = "none";
+//     notice.style.display = "block";
+//     notice.textContent = "คิวนี้สร้างโดยแอดมิน (อ่านอย่างเดียว)";
+//   } else {
+//     // กรณีดูของตัวเองในวันปกติ
+//     modalContent.classList.remove("booking-readonly");
+//     elFullName.readOnly = false;
+//     elNickname.readOnly = false;
+//     elAmount.readOnly = false;
+//     document.querySelectorAll(".time-slots input").forEach(i => i.disabled = false);
+//     saveBtn.style.display = "inline-block";
+//     delBtn.style.display = "inline-block";
+//     notice.style.display = "none";
+//   }
+
+//   /* =========================
+//      2. เช็ค "วันล็อก" (เงื่อนไขนี้จะ Override ทุกอย่างถ้าเป็นจริง)
+//   ========================= */
+//   const isLocked = isDateLocked(date); // ฟังก์ชันเช็คจากตาราง lockedDays
+
+//   if (isLocked && !isAdmin) {
+//     // ถ้านักศึกษาเปิดดูในวันที่ล็อก ให้ทำเหมือนโหมด Readonly ทุกประการ
+//     modalContent.classList.add("booking-readonly");
+//     elFullName.readOnly = true;
+//     elNickname.readOnly = true;
+//     elAmount.readOnly = true;
+//     document.querySelectorAll(".time-slots input").forEach(i => i.disabled = true);
+    
+//     // ซ่อนปุ่ม บันทึก และ ลบ ทันที
+//     saveBtn.style.display = "none";
+//     delBtn.style.display = "none";
+    
+//     // แสดงข้อความเตือน
+//     notice.style.display = "block";
+//     notice.textContent = "วันนี้ถูกปิดการจองแล้ว ไม่สามารถแก้ไขหรือลบได้";
+//   }
+
+//   updateTimeSlotAvailability(date);
+// }
+
+
 function openEditModal(studentId, date) {
   isEditMode = true;
   currentModalDate = date;
@@ -96,14 +184,15 @@ function openEditModal(studentId, date) {
   });
 
   /* =========================
-     🔐 PERMISSION
+     🔐 PERMISSION (EDIT MODE)
+     admin เท่านั้นที่แก้ / ลบได้
   ========================= */
   const modalContent = document.querySelector(".modal-content");
   const saveBtn = document.getElementById("saveBtn");
   const notice = document.getElementById("readonlyNotice");
 
   if (!isAdmin) {
-    // ===== USER =====
+    // ===== USER ธรรมดา =====
     isReadonlyMode = true;
 
     modalContent.classList.add("booking-readonly");
@@ -112,15 +201,15 @@ function openEditModal(studentId, date) {
     elNickname.readOnly = true;
     elAmount.readOnly = true;
 
-    document.querySelectorAll(".time-slots input")
-      .forEach(i => i.disabled = true);
+    document.querySelectorAll(".time-slots input").forEach(i => {
+      i.disabled = true;
+    });
 
     saveBtn.style.display = "none";
     delBtn.style.display = "none";
 
     notice.style.display = "block";
-    notice.textContent =
-      "เฉพาะแอดมินเท่านั้นที่สามารถแก้ไขหรือลบการจองได้";
+    notice.textContent = "เฉพาะแอดมินเท่านั้นที่สามารถแก้ไขหรือลบการจองได้";
   } else {
     // ===== ADMIN =====
     isReadonlyMode = false;
@@ -131,8 +220,9 @@ function openEditModal(studentId, date) {
     elNickname.readOnly = false;
     elAmount.readOnly = false;
 
-    document.querySelectorAll(".time-slots input")
-      .forEach(i => i.disabled = false);
+    document.querySelectorAll(".time-slots input").forEach(i => {
+      i.disabled = false;
+    });
 
     saveBtn.style.display = "inline-block";
     delBtn.style.display = "inline-block";
@@ -141,7 +231,7 @@ function openEditModal(studentId, date) {
   }
 
   /* =========================
-     🔒 DAY LOCK (USER ONLY)
+     🔒 DAY LOCK (override)
   ========================= */
   const isLocked = isDateLocked(date);
 
@@ -152,29 +242,36 @@ function openEditModal(studentId, date) {
     elNickname.readOnly = true;
     elAmount.readOnly = true;
 
-    document.querySelectorAll(".time-slots input")
-      .forEach(i => i.disabled = true);
+    document.querySelectorAll(".time-slots input").forEach(i => {
+      i.disabled = true;
+    });
 
     saveBtn.style.display = "none";
     delBtn.style.display = "none";
 
     notice.style.display = "block";
-    notice.textContent =
-      "วันนี้ถูกปิดการจองแล้ว ไม่สามารถแก้ไขหรือลบได้";
+    notice.textContent = "วันนี้ถูกปิดการจองแล้ว ไม่สามารถแก้ไขหรือลบได้";
   }
 
+
+  
   updateTimeSlotAvailability(date);
 }
+
+
+
 
 /* =========================
    CLOSE MODAL
 ========================= */
 function closeModal() {
   modal.style.display = "none";
-  updateBookingSummary("", null);
+
+  updateBookingSummary("", null); // ซ่อน summary + reset UI
   selectedWeekRange = null;
   selectedDates = [];
 }
+
 
 /* =========================
    WEEK DAY SELECTOR
