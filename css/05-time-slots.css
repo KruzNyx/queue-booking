@@ -7,7 +7,18 @@
 }
 
 .time-slots input { display: none; }
-
+.time-slots .admin-only {
+  display: none;
+}
+.time-slots input[type="checkbox"] {
+  display: none !important;
+}
+.time-slots .admin-only input {
+  display: none !important;
+}
+.time-slots .admin-only {
+  display: contents; /* สำคัญมาก */
+}
 .time-slots label {
   padding: 10px 12px;
   border-radius: 12px;

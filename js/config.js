@@ -47,6 +47,20 @@ async function restoreAdminSession() {
   isAdmin = data === true;
 }
 
+function afterAdminLogin() {
+  isAdmin = true;
+
+  // ปุ่ม admin
+  document.body.classList.add('admin-mode');
+  document.getElementById("adminLoginBtn").style.display = "none";
+  document.getElementById("adminLogoutBtn").style.display = "inline-block";
+
+  // ⭐ โชว์ช่วงเวลา admin-only (17.00–20.00)
+  document.querySelectorAll(".admin-only").forEach(el => {
+    el.style.display = ""; 
+  });
+}
+
 // WEEKLY RULES
 const WEEKLY_HOUR_RULES = [
   { min: 0,      max: 14999, maxHours: 3 },

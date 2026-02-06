@@ -165,3 +165,11 @@
   text-align: center;
   line-height: 1.4;
 }
+
+.admin-only {
+    display: none !important;
+}
+
+body.admin-mode .admin-only {
+    display: inline-block !important; /* หรือใช้ display ตามที่ปุ่มปกติใช้ */
+}

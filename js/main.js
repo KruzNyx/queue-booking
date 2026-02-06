@@ -1,5 +1,10 @@
 window.onload = async () => {
   await restoreAdminSession();
+
+  if (isAdmin) {
+    afterAdminLogin();
+  }
+
   currentViewDate = new Date(ALLOWED_YEAR, ALLOWED_MONTHS[0], 1);
   initMonthSlicer();
   initYearSlicer();
@@ -17,6 +22,7 @@ async function handleLogin() {
 
   if (success) {
     // alert("เข้าสู่ระบบแอดมินสำเร็จ");
+    afterAdminLogin();
     document.getElementById('loginModal').style.display = 'none';
     
     await loadBookings();
@@ -25,6 +31,7 @@ async function handleLogin() {
   } else {
     alert("Username หรือ Password ไม่ถูกต้อง");
   }
+
 }
 
 function updateAdminUI() {
