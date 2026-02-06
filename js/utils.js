@@ -108,24 +108,52 @@ function getAllowedHours(amount){
 
 // 🔒 default lock rule
 function isDateLocked(dateStr) {
-  // admin เคยตั้งค่าไว้ → ใช้ค่านั้น
-  if (lockedDays[dateStr] !== undefined) {
-    return lockedDays[dateStr] === true;
-  }
-
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   
   const targetDate = new Date(dateStr);
   targetDate.setHours(0, 0, 0, 0);
 
-  if (targetDate < today) {
-    return true; // ปิดอัตโนมัติเพราะผ่านมาแล้ว
+  // 1. ถ้ามีข้อมูลที่แอดมิน "ตั้งใจ" เซ็ตไว้ในฐานข้อมูล (Override ทุกกฎ)
+  if (lockedDays[dateStr] !== undefined) {
+    return lockedDays[dateStr] === true;
   }
 
-  // ❗ ถ้าไม่มี record → weekend = ปิด
+  // 2. ถ้าไม่มีการตั้งค่าพิเศษ และเป็น "วันย้อนหลัง" -> ปิดอัตโนมัติ
+  if (targetDate < today) {
+    return true; 
+  }
+
+  // 3. ถ้าเป็นวันในอนาคตที่ยังไม่ถูกตั้งค่า -> ปิดเฉพาะวันหยุด
   return isWeekend(dateStr);
 }
+
+
+// // 🔒 default lock rule
+// function isDateLocked(dateStr) {
+//   // admin เคยตั้งค่าไว้ → ใช้ค่านั้น
+//   if (lockedDays[dateStr] !== undefined) {
+//     return lockedDays[dateStr] === true;
+//   }
+
+//   const today = new Date();
+//   today.setHours(0, 0, 0, 0);
+  
+//   const targetDate = new Date(dateStr);
+//   targetDate.setHours(0, 0, 0, 0);
+
+//   if (targetDate < today) {
+//     return true; // ปิดอัตโนมัติเพราะผ่านมาแล้ว
+//   }
+
+//   // ❗ ถ้าไม่มี record → weekend = ปิด
+//   return isWeekend(dateStr);
+// }
+
+
+
+
+
 
 // function updateBookingSummary(studentId, date) {
 //   const summary = document.getElementById("bookingSummary");
