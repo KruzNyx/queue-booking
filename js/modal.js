@@ -29,6 +29,9 @@ function openAddModal(date) {
   editingRole = isAdmin ? "admin" : "student";
   editingSlots = [];
 
+          // const isAdminBooking = editingRole === "admin";
+          // applySlotVisibility(editingSlots, isAdminBooking);
+
   document.querySelectorAll(".time-slots input").forEach(i => {
     i.checked = false;
     i.disabled = false;
@@ -183,6 +186,9 @@ function openEditModal(studentId, date) {
     i.checked = editingSlots.includes(i.value);
   });
 
+
+
+
   /* =========================
      🔐 PERMISSION (EDIT MODE)
      admin เท่านั้นที่แก้ / ลบได้
@@ -254,7 +260,8 @@ function openEditModal(studentId, date) {
   }
 
 
-  
+          // const isAdminBooking = editingRole === "admin";
+          // applySlotVisibility(editingSlots, isAdminBooking);
   updateTimeSlotAvailability(date);
 }
 
@@ -320,36 +327,47 @@ function toggleModalWeekDate(dateStr, checked) {
   }
 }
 
-function applySlotVisibility(editingSlots = [], isAdminBooking = false) {
-  document.querySelectorAll(".time-slots input").forEach(input => {
-    const slot = input.value;
-    const wrapper = input.closest(".admin-only");
-    const label = document.querySelector(`label[for="${input.id}"]`);
-    const isAdminSlot = ADMIN_SLOTS.includes(slot);
-    const isSelected = editingSlots.includes(slot);
+// function applySlotVisibility(editingSlots = [], isAdminBooking = false) {
+//   document.querySelectorAll(".time-slots input").forEach(input => {
+//     const slot = input.value;
+//     const wrapper = input.closest(".admin-only");
+//     const label = document.querySelector(`label[for="${input.id}"]`);
+//     const isAdminSlot = ADMIN_SLOTS.includes(slot);
+//     const isSelected = editingSlots.includes(slot);
 
-    // ===== ADMIN =====
-    if (isAdmin) {
-      if (wrapper) wrapper.style.display = "";
-      input.disabled = false;
-      return;
-    }
+//     // ===== ADMIN =====
+//     if (isAdmin) {
+//       if (wrapper) wrapper.style.display = "";
+//       input.disabled = false;
+//       return;
+//     }
 
-    // ===== STUDENT =====
-    if (!isAdminBooking) {
-      // นศ.ปกติ → ซ่อน slot พิเศษทั้งหมด
-      if (isAdminSlot && wrapper) {
-        wrapper.style.display = "none";
-      }
-      return;
-    }
+//     // ===== STUDENT =====
 
-    // ===== นศ.ดู booking ที่แอดมินสร้าง/แก้ =====
-    if (isAdminSlot) {
-      if (wrapper) wrapper.style.display = "";   // 👀 แสดงทุก admin slot
-      input.checked = isSelected;                // ✔ เฉพาะที่แอดมินเลือก
-      input.disabled = true;                     // ❌ แก้ไม่ได้
-      label.classList.add("slot-admin-readonly");
-    }
-  });
-}
+//     // slot ปกติ 8.30–17.00 → แสดงปกติ
+//     if (!isAdminSlot) {
+//       input.disabled = false;
+//       return;
+//     }
+
+//     // ===== slot พิเศษ =====
+
+//     // ❌ ถ้า booking นี้ไม่ใช่ของ admin → ซ่อนหมด
+//     if (!isAdminBooking) {
+//       if (wrapper) wrapper.style.display = "none";
+//       return;
+//     }
+
+//     // ✅ booking ของ admin
+//     if (isSelected) {
+//       // 👉 แสดงเฉพาะ slot ที่แอดมินเลือก
+//       if (wrapper) wrapper.style.display = "";
+//       input.checked = true;
+//       input.disabled = true;
+//       label.classList.add("slot-admin-readonly");
+//     } else {
+//       // 👉 slot พิเศษอื่น ซ่อน
+//       if (wrapper) wrapper.style.display = "none";
+//     }
+//   });
+// }
