@@ -319,3 +319,37 @@ function toggleModalWeekDate(dateStr, checked) {
     selectedDates = selectedDates.filter(d => d !== dateStr);
   }
 }
+
+function applySlotVisibility(editingSlots = [], isAdminBooking = false) {
+  document.querySelectorAll(".time-slots input").forEach(input => {
+    const slot = input.value;
+    const wrapper = input.closest(".admin-only");
+    const label = document.querySelector(`label[for="${input.id}"]`);
+    const isAdminSlot = ADMIN_SLOTS.includes(slot);
+    const isSelected = editingSlots.includes(slot);
+
+    // ===== ADMIN =====
+    if (isAdmin) {
+      if (wrapper) wrapper.style.display = "";
+      input.disabled = false;
+      return;
+    }
+
+    // ===== STUDENT =====
+    if (!isAdminBooking) {
+      // นศ.ปกติ → ซ่อน slot พิเศษทั้งหมด
+      if (isAdminSlot && wrapper) {
+        wrapper.style.display = "none";
+      }
+      return;
+    }
+
+    // ===== นศ.ดู booking ที่แอดมินสร้าง/แก้ =====
+    if (isAdminSlot) {
+      if (wrapper) wrapper.style.display = "";   // 👀 แสดงทุก admin slot
+      input.checked = isSelected;                // ✔ เฉพาะที่แอดมินเลือก
+      input.disabled = true;                     // ❌ แก้ไม่ได้
+      label.classList.add("slot-admin-readonly");
+    }
+  });
+}
